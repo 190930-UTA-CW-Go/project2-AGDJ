@@ -30,10 +30,10 @@ func InstallDocker(login string, password string, ip string) string {
 
 // StartDocker =
 func StartDocker(login string, password string, ip string) string {
-	return Command("echo "+password+" | sudo systemctl start docker", login, ip)
+	return Command("echo "+password+" | sudo -S systemctl start docker", login, ip)
 }
 
 // EnableDocker =
 func EnableDocker(login string, password string, ip string) string {
-	return Command("echo "+password+" | sudo systemctl enable docker", login, ip)
+	return Command("echo "+password+" | sudo -S systemctl enable docker", login, ip)
 }
