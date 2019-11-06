@@ -6,19 +6,34 @@ import (
 	"net/http"
 )
 
+//Login structure of login
+type Login struct {
+	username string
+	pass     string
+}
+
 func main() {
-	http.Handle("/", http.FileServer(http.Dir(".")))
+	http.Handle("/", http.FileServer(http.Dir("server")))
 	http.HandleFunc("/login", login)
+	http.HandleFunc("/numcontainer", numcontainer)
 	http.ListenAndServe(":9000", nil)
 }
 
 func login(response http.ResponseWriter, request *http.Request) {
-	username := request.FormValue("username")
-	pass := request.FormValue("pass")
+	var l Login
 
-	fmt.Println("Username: " + username)
-	fmt.Println("Password: " + pass)
-	//output := []byte("Username: " + username + "Pass: " + pass)
+	l.username = request.FormValue("username")
+	l.pass = request.FormValue("pass")
 
-	//response.Write(output)
+	fmt.Println(l)
+
+}
+
+func numcontainer(response http.ResponseWriter, request *http.Request) {
+
+	numcontainer := request.FormValue("numcontainer")
+	string := "string"
+	fmt.Println(numcontainer)
+	response = http.ResponseWriter("numcontainer.html")
+
 }
