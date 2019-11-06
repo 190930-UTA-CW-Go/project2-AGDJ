@@ -8,14 +8,12 @@ import (
 )
 
 func main() {
-	//login, password, ip := login()
+	login, password, ip := login()
 
-	login := "agent1"
-	password := "secretagent"
-	ip := "192.168.56.102"
 	fmt.Println(ssh.CmdGetInfo(login, ip))
-	ssh.Install(login, password, ip)
-
+	fmt.Println(ssh.InstallDocker(login, password, ip))
+	fmt.Println(ssh.StartDocker(login, password, ip))
+	fmt.Println(ssh.EnableDocker(login, password, ip))
 }
 
 func login() (login string, password string, ip string) {
