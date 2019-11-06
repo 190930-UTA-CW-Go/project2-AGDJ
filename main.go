@@ -11,9 +11,7 @@ func main() {
 	login, password, ip := login()
 
 	fmt.Println(ssh.CmdGetInfo(login, ip))
-	fmt.Println(ssh.InstallDocker(login, password, ip))
-	fmt.Println(ssh.StartDocker(login, password, ip))
-	fmt.Println(ssh.EnableDocker(login, password, ip))
+	ssh.SetupDocker(login, password, ip)
 }
 
 func login() (login string, password string, ip string) {

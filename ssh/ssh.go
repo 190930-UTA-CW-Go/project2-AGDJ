@@ -23,6 +23,13 @@ func CmdGetInfo(login string, ip string) string {
 	return currentUser + "@" + string(hostName)
 }
 
+// SetupDocker =
+func SetupDocker(login string, password string, ip string) {
+	fmt.Println(InstallDocker(login, password, ip))
+	fmt.Println(StartDocker(login, password, ip))
+	fmt.Println(EnableDocker(login, password, ip))
+}
+
 // InstallDocker =
 func InstallDocker(login string, password string, ip string) string {
 	return Command("echo "+password+" | sudo -S apt install docker.io -y", login, ip)
