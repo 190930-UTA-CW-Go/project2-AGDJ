@@ -6,6 +6,9 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+  
+  "github.com/190930-UTA-CW-Go/project2-AGDJ/commands"
+	"github.com/190930-UTA-CW-Go/project2-AGDJ/opendb"
 )
 
 func main() {
@@ -28,6 +31,27 @@ type Numcont struct {
 //login function should verify entered usernamen and password against the database data
 //sets the appropriate variables against the
 func login(response http.ResponseWriter, request *http.Request) {
+  //username := request.FormValue("username")
+	//pass := request.FormValue("pass")
+  //fmt.Println("Username: " + username)
+	//fmt.Println("Password: " + pass)
+	// commands.SignIn("username, password", username, pass)
+	//commands.CreateAccount(username, pass)
+	//users := commands.QueryAllUsers()
+	//fmt.Println(users)
+	// id, name, pw := commands.QueryUser("ben")
+	// fmt.Println(id, name, pw)
+	// commands.CreateRunning(8080, "ben")
+	// commands.CreateRunning(9000, "ben")
+	// commands.CreateAccount("godfrey", "hello")
+	// commands.CreateRunning(9090, "godfrey")
+	// containers := commands.QueryAllRunning("")
+	// fmt.Println(containers)
+	// containers = commands.QueryAllRunning("ben")
+	// fmt.Println(containers)
+	// commands.DeleteRunning(8080)
+	// containers = commands.QueryAllRunning("")
+	// fmt.Println(containers)
 	user := Loggedin{false}
 	uname := request.FormValue("username")
 	pass := request.FormValue("pw")
