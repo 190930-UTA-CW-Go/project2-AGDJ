@@ -10,6 +10,7 @@ import (
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/commands"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/opendb"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/ssh"
+  "github.com/gittingdavid/project-2/potato"
 )
 
 func main() {
@@ -83,14 +84,20 @@ func numcontainer(response http.ResponseWriter, request *http.Request) {
 	numcust1, _ := strconv.Atoi(numcust)
 	if numcust1 > 0 {
 		numcon.Numcon = true
-		login := ""
-		ip := ""
-		password := ""
-		fmt.Println(ssh.CmdGetInfo(login, ip))
-		ssh.SetupDocker(login, password, ip)
-		fmt.Println(ssh.DockerStatus(login, ip))
-		fmt.Println(ssh.ListContainers(login, password, ip))
-		fmt.Println(ssh.ListImages(login, password, ip))
+    login := "_"
+	  password := "_"
+	  ip := "_"
+	  port := "22"
+
+	  potato.Connect(login, password, ip, port)
+// 		login := ""
+// 		ip := ""
+// 		password := ""
+// 		fmt.Println(ssh.CmdGetInfo(login, ip))
+// 		ssh.SetupDocker(login, password, ip)
+// 		fmt.Println(ssh.DockerStatus(login, ip))
+// 		fmt.Println(ssh.ListContainers(login, password, ip))
+// 		fmt.Println(ssh.ListImages(login, password, ip))
 		//fmt.Println(ssh.TestRun(login, password, ip))
 	} else {
 		numcon.Numcon = false
