@@ -2,14 +2,16 @@ package main
 
 import (
 	"fmt"
-	"os/exec"
 
+	"github.com/190930-UTA-CW-Go/project2-AGDJ/ssh"
 	"golang.org/x/crypto/ssh/terminal"
 )
 
 func main() {
 	login, password, ip := login()
-	install(login, password, ip)
+
+	fmt.Println(ssh.CmdGetInfo(login, ip))
+	ssh.SetupDocker(login, password, ip)
 }
 
 func login() (login string, password string, ip string) {
@@ -24,15 +26,4 @@ func login() (login string, password string, ip string) {
 	fmt.Println()
 
 	return
-}
-
-func install(login string, password string, ip string) {
-	// Ex) "wyrd"
-	var app string
-	fmt.Print("Type program to install: ")
-	fmt.Scan(&app)
-	fmt.Println("")
-
-	results, _ := exec.Command("ssh", login+"@"+ip, "echo "+password+" | sudo -S apt install "+app+" -y").Output()
-	fmt.Println(string(results))
 }
