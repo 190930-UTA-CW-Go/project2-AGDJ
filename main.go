@@ -6,10 +6,10 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
-  
+
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/commands"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/opendb"
-  "github.com/190930-UTA-CW-Go/project2-AGDJ/ssh"
+	"github.com/190930-UTA-CW-Go/project2-AGDJ/ssh"
 )
 
 func main() {
@@ -18,12 +18,6 @@ func main() {
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/numcontainer", numcontainer)
 	http.ListenAndServe(":9000", nil)
-	fmt.Println(ssh.CmdGetInfo(login, ip))
-	//ssh.SetupDocker(login, password, ip)
-	fmt.Println(ssh.DockerStatus(login, ip))
-	fmt.Println(ssh.ListContainers(login, password, ip))
-	fmt.Println(ssh.ListImages(login, password, ip))
-	//fmt.Println(ssh.TestRun(login, password, ip))
 }
 
 //Loggedin is a structure whic will hold the value to let the user into the server to edit information
@@ -89,6 +83,15 @@ func numcontainer(response http.ResponseWriter, request *http.Request) {
 	numcust1, _ := strconv.Atoi(numcust)
 	if numcust1 > 0 {
 		numcon.Numcon = true
+		login := ""
+		ip := ""
+		password := ""
+		fmt.Println(ssh.CmdGetInfo(login, ip))
+		ssh.SetupDocker(login, password, ip)
+		fmt.Println(ssh.DockerStatus(login, ip))
+		fmt.Println(ssh.ListContainers(login, password, ip))
+		fmt.Println(ssh.ListImages(login, password, ip))
+		//fmt.Println(ssh.TestRun(login, password, ip))
 	} else {
 		numcon.Numcon = false
 	}
