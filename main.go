@@ -9,6 +9,7 @@ import (
 
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/commands"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/opendb"
+  "github.com/190930-UTA-CW-Go/project2-AGDJ/ssh"
 )
 
 func main() {
@@ -17,6 +18,9 @@ func main() {
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/numcontainer", numcontainer)
 	http.ListenAndServe(":9000", nil)
+  login, password, ip := login()
+	fmt.Println(ssh.CmdGetInfo(login, ip))
+	ssh.SetupDocker(login, password, ip)
 }
 
 //Loggedin is a structure whic will hold the value to let the user into the server to edit information
