@@ -28,6 +28,7 @@ func SetupDocker(login string, password string, ip string) {
 	fmt.Println(InstallDocker(login, password, ip))
 	fmt.Println(StartDocker(login, password, ip))
 	fmt.Println(EnableDocker(login, password, ip))
+	fmt.Println(PullAlpine(login, password, ip))
 }
 
 // InstallDocker =
@@ -44,3 +45,30 @@ func StartDocker(login string, password string, ip string) string {
 func EnableDocker(login string, password string, ip string) string {
 	return Command("echo "+password+" | sudo -S systemctl enable docker", login, ip)
 }
+
+// PullAlpine =
+func PullAlpine(login string, password string, ip string) string {
+	return Command("echo "+password+" | sudo -S docker pull alpine", login, ip)
+}
+
+// DockerStatus =
+func DockerStatus(login string, ip string) string {
+	return Command("systemctl is-active docker", login, ip)
+}
+
+// ListContainers =
+func ListContainers(login string, password string, ip string) string {
+	return Command("echo "+password+" | sudo -S docker container ls -a", login, ip)
+}
+
+// ListImages =
+func ListImages(login string, password string, ip string) string {
+	return Command("echo "+password+" | sudo -S docker image ls -a", login, ip)
+}
+
+/*
+// TestRun =
+func TestRun(login string, password string, ip string) string {
+	return Command("echo "+password+" | sudo -S docker run alpine ls -l", login, ip)
+}
+*/
