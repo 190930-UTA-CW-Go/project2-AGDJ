@@ -9,8 +9,7 @@ import (
 
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/commands"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/opendb"
-	"github.com/190930-UTA-CW-Go/project2-AGDJ/ssh"
-  "github.com/gittingdavid/project-2/potato"
+	"github.com/190930-UTA-CW-Go/project2-AGDJ/sshsetup"
 )
 
 func main() {
@@ -34,32 +33,12 @@ type Numcont struct {
 //login function should verify entered usernamen and password against the database data
 //sets the appropriate variables against the
 func login(response http.ResponseWriter, request *http.Request) {
-	//username := request.FormValue("username")
-	//pass := request.FormValue("pass")
-	//fmt.Println("Username: " + username)
-	//fmt.Println("Password: " + pass)
-	//commands.CreateAccount(username, pass)
-	//users := commands.QueryAllUsers()
-	//fmt.Println(users)
-	// id, name, pw := commands.QueryUser("ben")
-	// fmt.Println(id, name, pw)
-	// commands.CreateRunning(8080, "ben")
-	// commands.CreateRunning(9000, "ben")
-	// commands.CreateAccount("godfrey", "hello")
-	// commands.CreateRunning(9090, "godfrey")
-	// containers := commands.QueryAllRunning("")
-	// fmt.Println(containers)
-	// containers = commands.QueryAllRunning("ben")
-	// fmt.Println(containers)
-	// commands.DeleteRunning(8080)
-	// containers = commands.QueryAllRunning("")
-	// fmt.Println(containers)
 	user := Loggedin{false}
 	uname := request.FormValue("username")
 	pass := request.FormValue("pw")
 	commands.CreateAccount("godfrey", "hello")
 	temp, _ := template.ParseFiles("client/templates/login.html")
-	fmt.Println("form value", uname, pass)
+	// fmt.Println("form value", uname, pass)
 	_, unamedb, passdb := commands.SignIn(uname)
 	if uname == unamedb {
 		if pass == passdb {
@@ -68,11 +47,8 @@ func login(response http.ResponseWriter, request *http.Request) {
 			user.Signedin = false
 		}
 	}
-	//here we pass in the user which is a Loggedin Struct which holds only one value of
-	//boolean this will help the html template workout which html to show
-	//you can see the usecase of the template in the login.html which handles that
-	fmt.Println(temp.Execute(response, user))
-
+	//fmt.Println(temp.Execute(response, user))
+	temp.Execute(response, user)
 }
 
 //should be a nice display page welcoming the user into webserver asking how many
@@ -84,21 +60,12 @@ func numcontainer(response http.ResponseWriter, request *http.Request) {
 	numcust1, _ := strconv.Atoi(numcust)
 	if numcust1 > 0 {
 		numcon.Numcon = true
-    login := "_"
-	  password := "_"
-	  ip := "_"
-	  port := "22"
+		login := "_"
+		password := "_"
+		ip := "_"
+		port := "22"
 
-	  potato.Connect(login, password, ip, port)
-// 		login := ""
-// 		ip := ""
-// 		password := ""
-// 		fmt.Println(ssh.CmdGetInfo(login, ip))
-// 		ssh.SetupDocker(login, password, ip)
-// 		fmt.Println(ssh.DockerStatus(login, ip))
-// 		fmt.Println(ssh.ListContainers(login, password, ip))
-// 		fmt.Println(ssh.ListImages(login, password, ip))
-		//fmt.Println(ssh.TestRun(login, password, ip))
+		sshsetup.Connect(login, password, ip, port)
 	} else {
 		numcon.Numcon = false
 	}

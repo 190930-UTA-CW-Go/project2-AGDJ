@@ -1,4 +1,4 @@
-package potato
+package sshsetup
 
 import (
 	"fmt"
@@ -13,9 +13,9 @@ import (
 // Commands =
 func Commands(in chan<- string, out <-chan string, password string) {
 	GetInfo(in, out)
-	//SetupDocker(in, out, password)
-	DockerStatus(in, out)
-	ListContainers(in, out, password)
+	SetupDocker(in, out, password)
+	//DockerStatus(in, out)
+	//ListContainers(in, out, password)
 	ListImages(in, out, password)
 }
 
@@ -35,9 +35,9 @@ func GetInfo(in chan<- string, out <-chan string) {
 
 // SetupDocker =
 func SetupDocker(in chan<- string, out <-chan string, password string) {
-	InstallDocker(in, out, password)
-	StartDocker(in, out, password)
-	EnableDocker(in, out, password)
+	//InstallDocker(in, out, password)
+	//StartDocker(in, out, password)
+	//EnableDocker(in, out, password)
 	PullAlpine(in, out, password)
 }
 
