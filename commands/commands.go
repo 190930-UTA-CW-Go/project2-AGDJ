@@ -22,17 +22,18 @@ type Containers struct {
 	username      string
 }
 
-// SignIn verifies if customer or employee credentials match database
-func SignIn(values string, username string, password string) (string, string) {
+// SignIn verifies if user credentials match database
+func SignIn(username string) (int, string, string) {
 	var usernamedb, passdb string
+	var id int
 	var row *sql.Row
 
 	db := opendb.OpenDB()
 	defer db.Close()
-	row = db.QueryRow("SELECT $1 FROM users WHERE username = $2", values, username)
-	row.Scan(&usernamedb, &passdb)
+	row = db.QueryRow("SELECT * FROM users WHERE username = $1", username)
+	row.Scan(&id, &usernamedb, &passdb)
 	fmt.Println("Logged in with", usernamedb, passdb)
-	return usernamedb, passdb
+	return id, usernamedb, passdb
 }
 
 // CreateAccount for either a customer or employee

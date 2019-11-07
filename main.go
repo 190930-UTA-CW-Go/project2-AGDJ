@@ -6,12 +6,13 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
-  
-  "github.com/190930-UTA-CW-Go/project2-AGDJ/commands"
+
+	"github.com/190930-UTA-CW-Go/project2-AGDJ/commands"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/opendb"
 )
 
 func main() {
+	opendb.StartDB()
 	http.Handle("/", http.FileServer(http.Dir("client")))
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/numcontainer", numcontainer)
@@ -31,11 +32,10 @@ type Numcont struct {
 //login function should verify entered usernamen and password against the database data
 //sets the appropriate variables against the
 func login(response http.ResponseWriter, request *http.Request) {
-  //username := request.FormValue("username")
+	//username := request.FormValue("username")
 	//pass := request.FormValue("pass")
-  //fmt.Println("Username: " + username)
+	//fmt.Println("Username: " + username)
 	//fmt.Println("Password: " + pass)
-	// commands.SignIn("username, password", username, pass)
 	//commands.CreateAccount(username, pass)
 	//users := commands.QueryAllUsers()
 	//fmt.Println(users)
@@ -55,9 +55,12 @@ func login(response http.ResponseWriter, request *http.Request) {
 	user := Loggedin{false}
 	uname := request.FormValue("username")
 	pass := request.FormValue("pw")
+	commands.CreateAccount("godfrey", "hello")
 	temp, _ := template.ParseFiles("client/templates/login.html")
-	if uname == "akhv" {
-		if pass == "password" {
+	fmt.Println("form value", uname, pass)
+	_, unamedb, passdb := commands.SignIn(uname)
+	if uname == unamedb {
+		if pass == passdb {
 			user.Signedin = true
 		} else {
 			user.Signedin = false
