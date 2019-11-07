@@ -1,29 +1,94 @@
 package main
 
 import (
+	_ "expvar"
 	"fmt"
+	"html/template"
+	"net/http"
+	"strconv"
 
-	"github.com/190930-UTA-CW-Go/project2-AGDJ/ssh"
-	"golang.org/x/crypto/ssh/terminal"
+	"github.com/190930-UTA-CW-Go/project2-AGDJ/commands"
+	"github.com/190930-UTA-CW-Go/project2-AGDJ/opendb"
+  "github.com/190930-UTA-CW-Go/project2-AGDJ/ssh"
 )
 
 func main() {
-	login, password, ip := login()
-
+	opendb.StartDB()
+	http.Handle("/", http.FileServer(http.Dir("client")))
+	http.HandleFunc("/login", login)
+	http.HandleFunc("/numcontainer", numcontainer)
+	http.ListenAndServe(":9000", nil)
+  login, password, ip := login()
 	fmt.Println(ssh.CmdGetInfo(login, ip))
 	ssh.SetupDocker(login, password, ip)
 }
 
-func login() (login string, password string, ip string) {
-	fmt.Print("Login: ")
-	fmt.Scan(&login)
-	fmt.Print("Password: ")
-	result, _ := terminal.ReadPassword(0)
-	password = string(result)
-	fmt.Println()
-	fmt.Print("IP Address: ")
-	fmt.Scan(&ip)
-	fmt.Println()
+//Loggedin is a structure whic will hold the value to let the user into the server to edit information
+type Loggedin struct {
+	Signedin bool
+}
 
-	return
+//Numcont is a structure for number of containers
+type Numcont struct {
+	Numcon bool
+}
+
+//login function should verify entered usernamen and password against the database data
+//sets the appropriate variables against the
+func login(response http.ResponseWriter, request *http.Request) {
+	//username := request.FormValue("username")
+	//pass := request.FormValue("pass")
+	//fmt.Println("Username: " + username)
+	//fmt.Println("Password: " + pass)
+	//commands.CreateAccount(username, pass)
+	//users := commands.QueryAllUsers()
+	//fmt.Println(users)
+	// id, name, pw := commands.QueryUser("ben")
+	// fmt.Println(id, name, pw)
+	// commands.CreateRunning(8080, "ben")
+	// commands.CreateRunning(9000, "ben")
+	// commands.CreateAccount("godfrey", "hello")
+	// commands.CreateRunning(9090, "godfrey")
+	// containers := commands.QueryAllRunning("")
+	// fmt.Println(containers)
+	// containers = commands.QueryAllRunning("ben")
+	// fmt.Println(containers)
+	// commands.DeleteRunning(8080)
+	// containers = commands.QueryAllRunning("")
+	// fmt.Println(containers)
+	user := Loggedin{false}
+	uname := request.FormValue("username")
+	pass := request.FormValue("pw")
+	commands.CreateAccount("godfrey", "hello")
+	temp, _ := template.ParseFiles("client/templates/login.html")
+	fmt.Println("form value", uname, pass)
+	_, unamedb, passdb := commands.SignIn(uname)
+	if uname == unamedb {
+		if pass == passdb {
+			user.Signedin = true
+		} else {
+			user.Signedin = false
+		}
+	}
+	//here we pass in the user which is a Loggedin Struct which holds only one value of
+	//boolean this will help the html template workout which html to show
+	//you can see the usecase of the template in the login.html which handles that
+	fmt.Println(temp.Execute(response, user))
+
+}
+
+//should be a nice display page welcoming the user into webserver asking how many
+//alpine images they would like to run
+func numcontainer(response http.ResponseWriter, request *http.Request) {
+	numcon := Numcont{false}
+	numcust := request.FormValue("numcontainer")
+	temp1, _ := template.ParseFiles("client/templates/numcontainer.html")
+	numcust1, _ := strconv.Atoi(numcust)
+	if numcust1 > 0 {
+		numcon.Numcon = true
+	} else {
+		numcon.Numcon = false
+	}
+
+	fmt.Println(temp1.Execute(response, numcon))
 }
