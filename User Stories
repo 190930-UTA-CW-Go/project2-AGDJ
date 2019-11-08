@@ -1,0 +1,33 @@
+user stories
+create an application for end user to easily mass deploy their own bash shells an invoke functions and usage straight from the 
+webpage
+EPIC 1
+all-in-one server which will be the single point of contact between the user and their machines on the server
+	-http landing page
+		-login/signup
+	-http page to handle user info
+		-how many alpine images will be running(on server2)
+			-option to select what port device should be runnin on if applicable
+		-response back from server with the http links:port# to take them to their online bash scripts
+Payload delivery system -done by pod.com(server1)
+	-installation of docker on a device from the users input
+	-installation of docker imagecreating and running the container
+	-exposing a port on a specific device to be able to view docker webserver
+Payload consists of web bash server fo people to be able to remotely be able to run their commands in terminal
+
+EPIC2
+PAYLOAD idea 1
+have our own tool to be able to be deployable to many different devices Idea mockups
+create instances of linux machines on our server and give users remote shh access to those devices
+	-could be done through dockerizing and running a container then opening up a port on the device
+	-educational purposes
+	-throw up a simple alpine image
+
+PAYLOAD IDEA 2
+user wants to host 3 different servers with the same exact server for their demands
+to handle high traffic coming into their server pages
+a middle man server will be thrown up to load balance the incomming traffic and handle different conncetions
+-try and simulate three different servers with a docker container runningX3 and then the 
+middleman server will be in the middle handling traffic and handing them off to actual other ports 
+or servers on the network so that the number of users is equally distributed among the different servers.
+NGINX is a tool whic was made to serve that purpouse.
