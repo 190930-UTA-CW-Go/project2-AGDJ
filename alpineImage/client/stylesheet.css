@@ -1,0 +1,32 @@
+#top,
+#bottom {
+    position: fixed;
+    left: 0;
+    right: 0;
+}
+
+#top {
+    top: 0;
+    height: 95%;
+    background-color:black;
+}
+
+#bottom {
+    bottom: 0;
+    height: 5%;
+    background-color: black;
+}
+#form_id
+{
+    display:inline;
+    vertical-align:top;
+    text-align:center;
+}
+#form_id input[type="text"]
+{
+    margin: 0;
+}
+#text
+{
+    color: red;
+}
