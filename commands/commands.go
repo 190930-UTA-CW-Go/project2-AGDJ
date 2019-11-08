@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/gmac220/project2-AGDJ/opendb"
+	"github.com/190930-UTA-CW-Go/project2-AGDJ/opendb"
 )
 
 // Users contains id, username, and password
