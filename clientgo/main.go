@@ -2,10 +2,13 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"log"
 	"os"
 	"os/exec"
+
+	"github.com/190930-UTA-CW-Go/project2-AGDJ/clientgo/aptprog"
+	"github.com/190930-UTA-CW-Go/project2-AGDJ/clientgo/cpumem"
+	"github.com/190930-UTA-CW-Go/project2-AGDJ/clientgo/cpuusage"
+	"github.com/190930-UTA-CW-Go/project2-AGDJ/clientgo/lscpu"
 )
 
 func main() {
@@ -14,62 +17,36 @@ func main() {
 	appUninstall := flag.String("uninstall", "", "uninstall programs using apt")
 	appUpgrade := flag.String("upgrade", "", "upgrade programs using apt")
 	appKill := flag.String("kill", "", "kills a process based on id")
+	appCreateReport := flag.Bool("report", false, "return a report on the system")
 	flag.Parse()
 
+	if *appCreateReport {
+		systemInfoLoc := os.ExpandEnv("$HOME/lscpuvar.txt")
+		cpuUsageLoc := os.ExpandEnv("$HOME/cpupercentage.txt")
+		cpumemLoc := os.ExpandEnv("$HOME/cpumem.txt")
+		cpumem.CreateTopSnapshot()
+		cpuusage.CreateCPUUsage()
+		lscpu.CreateLSCPUFILE()
+		exec.Command("bash", "-c", "cat "+systemInfoLoc+" "+cpuUsageLoc+" "+cpumemLoc+">> "+os.ExpandEnv("$HOME")+"/superinfo.txt").Run()
+	}
+
 	if *appSearch != "" {
-		SearchProgHandler(*appSearch)
+		aptprog.SearchProgHandler(*appSearch)
 	}
 
 	if *appInstall != "" {
-		InstallProgHandler(*appInstall)
+		aptprog.InstallProgHandler(*appInstall)
 	}
 
 	if *appUninstall != "" {
-		UninstallProgHandler(*appUninstall)
+		aptprog.UninstallProgHandler(*appUninstall)
 	}
 
 	if *appUpgrade != "" {
-		UpgradeProgHandler(*appUpgrade)
+		aptprog.UpgradeProgHandler(*appUpgrade)
 	}
 
 	if *appKill != "" {
-		KillProcessHandler(*appKill)
+		aptprog.KillProcessHandler(*appKill)
 	}
-}
-
-// SearchProgHandler searches apt for specified program user searches for and puts it inside a text file
-func SearchProgHandler(appname string) {
-	searchFile := os.ExpandEnv("$HOME/searchapps.txt")
-	file, err := os.OpenFile(searchFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY|os.O_RDONLY, 0666)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	usrSearch := exec.Command("apt", "search", appname)
-	searchOutput, stderr := usrSearch.Output()
-	if stderr != nil {
-		fmt.Println(stderr)
-	}
-	file.Write(searchOutput)
-}
-
-// InstallProgHandler installs the program that is passed in
-func InstallProgHandler(appname string) {
-	exec.Command("sudo", "apt", "install", "-y", appname).Run()
-}
-
-// UpgradeProgHandler upgrades the program to the latest version in apt
-func UpgradeProgHandler(appname string) {
-	exec.Command("sudo", "apt", "upgrade", "-y", appname).Run()
-}
-
-// UninstallProgHandler removes the program that is passed in
-func UninstallProgHandler(appname string) {
-	exec.Command("sudo", "apt", "purge", "-y", appname).Run()
-}
-
-// KillProcessHandler kills process
-func KillProcessHandler(procid string) {
-	exec.Command("sudo", "kill", procid).Run()
 }
