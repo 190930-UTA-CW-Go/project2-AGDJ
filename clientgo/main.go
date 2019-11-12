@@ -79,7 +79,7 @@ func handleRequests() {
 
 func main() {
 	handleRequests()
-	appSearch := flag.String("search", "", "searches for program")
+	appSearch := flag.Bool("search", false, "searches for program")
 	appInstall := flag.String("install", "", "install programs using apt")
 	appUninstall := flag.String("uninstall", "", "uninstall programs using apt")
 	appUpgrade := flag.String("upgrade", "", "upgrade programs using apt")
@@ -97,8 +97,8 @@ func main() {
 		exec.Command("bash", "-c", "cat "+systemInfoLoc+" "+cpuUsageLoc+" "+cpumemLoc+">> "+os.ExpandEnv("$HOME")+"/superinfo.txt").Run()
 	}
 
-	if *appSearch != "" {
-		aptprog.SearchProgHandler(*appSearch)
+	if *appSearch {
+		aptprog.SearchProgHandler()
 	}
 
 	if *appInstall != "" {

@@ -27,9 +27,10 @@ type UserInfo struct {
 	Password string `json:"password"`
 }
 
-type apps struct {
-	Name string
-	Desc string
+//AptProgsStruct lists all the
+type AptProgsStruct struct {
+	Name string `json:"APPNAME"`
+	Desc string `json:"DESC"`
 }
 
 func main() {
