@@ -15,8 +15,9 @@ import (
 func main() {
 	opendb.StartDB()
 	http.Handle("/", http.FileServer(http.Dir("client")))
-	http.HandleFunc("/login", login)
-	http.HandleFunc("/numcontainer", numcontainer)
+	//http.HandleFunc("/", welcome)
+	http.HandleFunc("/index1", login)
+	http.HandleFunc("/numcontainer2", numcontainer)
 	http.ListenAndServe(":9000", nil)
 }
 
@@ -37,7 +38,7 @@ func login(response http.ResponseWriter, request *http.Request) {
 	uname := request.FormValue("username")
 	pass := request.FormValue("pw")
 	commands.CreateAccount("godfrey", "hello")
-	temp, _ := template.ParseFiles("client/templates/login.html")
+	temp, _ := template.ParseFiles("client/login.html")
 	// fmt.Println("form value", uname, pass)
 	_, unamedb, passdb := commands.SignIn(uname)
 	if uname == unamedb {
@@ -55,8 +56,8 @@ func login(response http.ResponseWriter, request *http.Request) {
 //alpine images they would like to run
 func numcontainer(response http.ResponseWriter, request *http.Request) {
 	numcon := Numcont{false}
-	numcust := request.FormValue("numcontainer")
-	temp1, _ := template.ParseFiles("client/templates/numcontainer.html")
+	numcust := request.FormValue("numcontainer2")
+	temp1, _ := template.ParseFiles("client/templates/numcontainer2.html")
 	numcust1, _ := strconv.Atoi(numcust)
 	if numcust1 > 0 {
 		numcon.Numcon = true
