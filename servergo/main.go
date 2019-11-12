@@ -36,6 +36,7 @@ func main() {
 	Post("david", "chang")
 
 	//////////////////
+	fmt.Println("hello")
 	serveAndListen()
 }
 func getWorkerInfo() ButlerInfoStruct {
