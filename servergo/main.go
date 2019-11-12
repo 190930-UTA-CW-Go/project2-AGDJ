@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io/ioutil"
+	"log"
 	"net/http"
 
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/cpumem"
@@ -34,7 +36,9 @@ func main() {
 	Post("david", "chang")
 
 	//////////////////
-
+	serveAndListen()
+}
+func getWorkerInfo() ButlerInfoStruct {
 	fmt.Println("start application getting worker info")
 	response, err := http.Get("http://localhost:8080/getbutlerinfo")
 	var infoHolder ButlerInfoStruct
@@ -43,8 +47,24 @@ func main() {
 	} else {
 		data, _ := ioutil.ReadAll(response.Body)
 		json.Unmarshal(data, &infoHolder)
-		fmt.Println(infoHolder.Lscpu)
 	}
+	return infoHolder
+}
+
+func serveAndListen() {
+	http.Handle("/", http.FileServer(http.Dir("server")))
+	http.HandleFunc("/open", open)
+	http.ListenAndServe(":8081", nil)
+}
+
+func open(w http.ResponseWriter, r *http.Request) {
+	temp, err := template.ParseFiles("server/templates/workerinfo.html")
+	if err != nil {
+		log.Println("this code sucks")
+	}
+	holder := getWorkerInfo()
+	fmt.Println(holder.Lscpu.Architecture)
+	log.Println(temp.Execute(w, holder))
 }
 
 // Post =
