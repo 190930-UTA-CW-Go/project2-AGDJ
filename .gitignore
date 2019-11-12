@@ -5,6 +5,7 @@
 *.so
 *.dylib
 /clientgo/info.log
+/RESTfulAPI
 
 # Test binary, build with `go test -c`
 *.test
