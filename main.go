@@ -14,10 +14,14 @@ import (
 
 func main() {
 	opendb.StartDB()
+	//need to ssh here into the podSlave
+	//sshsetup.
+
 	http.Handle("/", http.FileServer(http.Dir("client")))
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/numcontainer", numcontainer)
 	http.ListenAndServe(":9000", nil)
+
 }
 
 //Loggedin is a structure whic will hold the value to let the user into the server to edit information
