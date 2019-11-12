@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -20,6 +22,19 @@ type ButlerInfoStruct struct {
 	Lscpu    lscpu.LSCPU       `json:"LSCPU"`
 	CPUUsage cpuusage.CPUUsage `json:"CPUUSAGE"`
 	Cpumem   cpumem.CPUTOP     `json:"CPUMEM"`
+	Apps     []AptProgsStruct  `json:"APPS"`
+}
+
+// UserInfo =
+type UserInfo struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+//AptProgsStruct lists all the
+type AptProgsStruct struct {
+	Name string `json:"APPNAME"`
+	Desc string `json:"DESC"`
 }
 
 func getButlerInfo(w http.ResponseWriter, r *http.Request) {
@@ -32,15 +47,39 @@ func getButlerInfo(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(butlerHolder)
 }
+
+func userInfo(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	//case "GET":
+	case "POST":
+		result, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		user := UserInfo{}
+		json.Unmarshal(result, &user)
+		//fmt.Println(user)
+		fmt.Println(user.Username)
+		fmt.Println(user.Password)
+		w.Write([]byte("Received a POST request\n"))
+
+	default:
+		w.WriteHeader(http.StatusNotImplemented)
+		w.Write([]byte(http.StatusText(http.StatusNotImplemented)))
+	}
+}
+
 func handleRequests() {
 	route := mux.NewRouter().StrictSlash(true)
 	route.HandleFunc("/getbutlerinfo", getButlerInfo)
+	route.HandleFunc("/userinfo", userInfo)
 	log.Fatal(http.ListenAndServe(":8080", route))
 }
 
 func main() {
 	handleRequests()
-	appSearch := flag.String("search", "", "searches for program")
+	appSearch := flag.Bool("search", false, "searches for program")
 	appInstall := flag.String("install", "", "install programs using apt")
 	appUninstall := flag.String("uninstall", "", "uninstall programs using apt")
 	appUpgrade := flag.String("upgrade", "", "upgrade programs using apt")
@@ -58,8 +97,8 @@ func main() {
 		exec.Command("bash", "-c", "cat "+systemInfoLoc+" "+cpuUsageLoc+" "+cpumemLoc+">> "+os.ExpandEnv("$HOME")+"/superinfo.txt").Run()
 	}
 
-	if *appSearch != "" {
-		aptprog.SearchProgHandler(*appSearch)
+	if *appSearch {
+		aptprog.SearchProgHandler()
 	}
 
 	if *appInstall != "" {
