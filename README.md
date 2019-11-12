@@ -33,5 +33,3 @@ If you want to look into your table in postgres use this command
 ```bash
 docker exec -it runningproject2 psql -U postgres
 ```
-
-hello
