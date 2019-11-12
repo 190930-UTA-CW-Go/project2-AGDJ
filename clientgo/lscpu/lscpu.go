@@ -159,7 +159,7 @@ func ReadLSCPUCommand() LSCPU {
 	if err != nil {
 		cpuMAXMhz = []byte("N/A")
 		checkMAXM = false
-		log.Fatalf("%s: %s", err, "grabbing CPU max MHz failed")
+		log.Printf("%s: %s", err, "grabbing CPU max MHz failed")
 	}
 	if checkMAXM {
 		//fmt.Println(string(cpuMAXMhz)[21 : len(string(cpuMAXMhz))-1])
@@ -174,7 +174,7 @@ func ReadLSCPUCommand() LSCPU {
 	if err != nil {
 		cpuMINMhz = []byte("N/A")
 		checkMINM = false
-		log.Fatalf("%s: %s", err, "grabbing CPU min MHz failed")
+		log.Printf("%s: %s", err, "grabbing CPU min MHz failed")
 	}
 	if checkMINM {
 		//fmt.Println(string(cpuMINMhz)[21 : len(string(cpuMINMhz))-1])

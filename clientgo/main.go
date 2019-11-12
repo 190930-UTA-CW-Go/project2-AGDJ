@@ -20,6 +20,13 @@ type ButlerInfoStruct struct {
 	Lscpu    lscpu.LSCPU       `json:"LSCPU"`
 	CPUUsage cpuusage.CPUUsage `json:"CPUUSAGE"`
 	Cpumem   cpumem.CPUTOP     `json:"CPUMEM"`
+	Apps     []AptProgsStruct  `json:"APPS"`
+}
+
+//AptProgsStruct lists all the
+type AptProgsStruct struct {
+	Name string `json:"APPNAME"`
+	Desc string `json:"DESC"`
 }
 
 func getButlerInfo(w http.ResponseWriter, r *http.Request) {
