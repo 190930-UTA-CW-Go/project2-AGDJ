@@ -13,9 +13,13 @@ import (
 
 //ButlerInfoStruct will be used to pass vital butler client information
 type ButlerInfoStruct struct {
-	Lscpu    lscpu.LSCPU       `json:"LSCPU"`
+	Lscpu    lscpu.LSCPU
 	CPUUsage cpuusage.CPUUsage `json:"CPUUSAGE"`
 	Cpumem   cpumem.CPUTOP     `json:"CPUMEM"`
+}
+type apps struct {
+	Name string
+	Desc string
 }
 
 func main() {
