@@ -1,7 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
+	"log"
+	"net/http"
 	"os"
 	"os/exec"
 
@@ -9,9 +12,34 @@ import (
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/clientgo/cpumem"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/clientgo/cpuusage"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/clientgo/lscpu"
+	"github.com/gorilla/mux"
 )
 
+//ButlerInfoStruct will be used to pass vital butler client information
+type ButlerInfoStruct struct {
+	Lscpu    lscpu.LSCPU       `json:"LSCPU"`
+	CPUUsage cpuusage.CPUUsage `json:"CPUUSAGE"`
+	Cpumem   cpumem.CPUTOP     `json:"CPUMEM"`
+}
+
+func getButlerInfo(w http.ResponseWriter, r *http.Request) {
+	cpumem.CreateTopSnapshot()
+	cpuusage.CreateCPUUsage()
+	lscpu.CreateLSCPUFILE()
+	butlerHolder := ButlerInfoStruct{
+		Lscpu: lscpu.ReadLSCPUCommand(), CPUUsage: cpuusage.GetCPUUsage(),
+		Cpumem: cpumem.GetTopSnapshot(),
+	}
+	json.NewEncoder(w).Encode(butlerHolder)
+}
+func handleRequests() {
+	route := mux.NewRouter().StrictSlash(true)
+	route.HandleFunc("/getbutlerinfo", getButlerInfo)
+	log.Fatal(http.ListenAndServe(":8080", route))
+}
+
 func main() {
+	handleRequests()
 	appSearch := flag.String("search", "", "searches for program")
 	appInstall := flag.String("install", "", "install programs using apt")
 	appUninstall := flag.String("uninstall", "", "uninstall programs using apt")
