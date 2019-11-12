@@ -30,3 +30,8 @@ func main() {
 		fmt.Println(infoHolder.Lscpu)
 	}
 }
+
+// func seeWhat(w http.ResponseWriter, r *http.Request){
+// 	c := &ButlerInfoStruct{}
+// 	json.NewDecoder()
+// }
