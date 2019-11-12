@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -17,12 +18,23 @@ type ButlerInfoStruct struct {
 	CPUUsage cpuusage.CPUUsage `json:"CPUUSAGE"`
 	Cpumem   cpumem.CPUTOP     `json:"CPUMEM"`
 }
+
+// UserInfo =
+type UserInfo struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
 type apps struct {
 	Name string
 	Desc string
 }
 
 func main() {
+	Post("david", "chang")
+
+	//////////////////
+
 	fmt.Println("start application getting worker info")
 	response, err := http.Get("http://localhost:8080/getbutlerinfo")
 	var infoHolder ButlerInfoStruct
@@ -33,4 +45,23 @@ func main() {
 		json.Unmarshal(data, &infoHolder)
 		fmt.Println(infoHolder.Lscpu)
 	}
+}
+
+// Post =
+func Post(username string, password string) {
+	infoData := &UserInfo{
+		Username: username,
+		Password: password}
+	infoByte, _ := json.Marshal(infoData)
+	url := "http://localhost:8080/userinfo"
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(infoByte))
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
 }
