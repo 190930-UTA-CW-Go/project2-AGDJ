@@ -74,8 +74,11 @@ func GetSearchInfo() []AptProgsStruct {
 }
 
 // InstallProgHandler installs the program that is passed in
-func InstallProgHandler(appname string) {
-	exec.Command("sudo", "apt", "install", "-y", appname).Run()
+// func InstallProgHandler(appname string) {
+func InstallProgHandler(appname string, pw string) {
+	//exec.Command("sudo", "apt", "install", "-y", appname).Run()
+	cmd := "echo " + pw + " | sudo -S apt install -y " + appname
+	exec.Command("bash", "-c", cmd).Run()
 }
 
 // UpgradeProgHandler upgrades the program to the latest version in apt
