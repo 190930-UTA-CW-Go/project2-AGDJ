@@ -19,10 +19,10 @@ import (
 
 //ButlerInfoStruct will be used to pass vital butler client information
 type ButlerInfoStruct struct {
-	Lscpu    lscpu.LSCPU       `json:"LSCPU"`
-	CPUUsage cpuusage.CPUUsage `json:"CPUUSAGE"`
-	Cpumem   cpumem.CPUTOP     `json:"CPUMEM"`
-	Apps     []AptProgsStruct  `json:"APPS"`
+	Lscpu    lscpu.LSCPU              `json:"LSCPU"`
+	CPUUsage cpuusage.CPUUsage        `json:"CPUUSAGE"`
+	Cpumem   cpumem.CPUTOP            `json:"CPUMEM"`
+	Apps     []aptprog.AptProgsStruct `json:"APPS"`
 }
 
 // UserInfo =
@@ -31,23 +31,19 @@ type UserInfo struct {
 	Password string `json:"password"`
 }
 
-//AptProgsStruct lists all the
-type AptProgsStruct struct {
-	Name string `json:"APPNAME"`
-	Desc string `json:"DESC"`
-}
-
 func getButlerInfo(w http.ResponseWriter, r *http.Request) {
 	cpumem.CreateTopSnapshot()
 	cpuusage.CreateCPUUsage()
 	lscpu.CreateLSCPUFILE()
+	aptprog.SearchProgHandler()
 	butlerHolder := ButlerInfoStruct{
 		Lscpu: lscpu.ReadLSCPUCommand(), CPUUsage: cpuusage.GetCPUUsage(),
-		Cpumem: cpumem.GetTopSnapshot(),
+		Cpumem: cpumem.GetTopSnapshot(), Apps: aptprog.GetSearchInfo(),
 	}
 	json.NewEncoder(w).Encode(butlerHolder)
 }
 
+//UserInfo function handles incoming post request for list of programs to be installed.
 func userInfo(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	//case "GET":
@@ -56,29 +52,56 @@ func userInfo(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal(err)
 		}
-
 		user := UserInfo{}
 		json.Unmarshal(result, &user)
 		//fmt.Println(user)
 		fmt.Println(user.Username)
 		fmt.Println(user.Password)
 		w.Write([]byte("Received a POST request\n"))
-
 	default:
 		w.WriteHeader(http.StatusNotImplemented)
 		w.Write([]byte(http.StatusText(http.StatusNotImplemented)))
 	}
 }
 
+//ProgramsToInstall handles post requests of desired applications to be installed.
+func ProgramsToInstall(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+		UnmarshProgList, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Println(err)
+		}
+		var progList []aptprog.AptProgsStruct
+		json.Unmarshal(UnmarshProgList, &progList)
+		//call on batch install
+		BatchInstall(progList)
+	default:
+		w.WriteHeader(http.StatusNotImplemented)
+		w.Write([]byte(http.StatusText(http.StatusNotImplemented)))
+	}
+}
+
+//BatchInstall will Install a bathc of passed in programs.
+func BatchInstall(hold []aptprog.AptProgsStruct) {
+	for _, k := range hold {
+		// aptprog.InstallProgHandler(k.Name)
+		aptprog.InstallProgHandler(k.Name, "")
+	}
+	log.Println("Successful installation of programs")
+}
+
+//////////////////////// HTTP SERVER HERE //////////////////
 func handleRequests() {
 	route := mux.NewRouter().StrictSlash(true)
 	route.HandleFunc("/getbutlerinfo", getButlerInfo)
 	route.HandleFunc("/userinfo", userInfo)
+	route.HandleFunc("/install", ProgramsToInstall)
 	log.Fatal(http.ListenAndServe(":8080", route))
 }
 
+////////////////////// MAIN FUNCTION HERE ///////////////////
 func main() {
-	handleRequests()
 	appSearch := flag.Bool("search", false, "searches for program")
 	appInstall := flag.String("install", "", "install programs using apt")
 	appUninstall := flag.String("uninstall", "", "uninstall programs using apt")
@@ -102,18 +125,21 @@ func main() {
 	}
 
 	if *appInstall != "" {
-		aptprog.InstallProgHandler(*appInstall)
+		// aptprog.InstallProgHandler(*appInstall)
+		aptprog.InstallProgHandler(*appInstall, "")
 	}
 
 	if *appUninstall != "" {
-		aptprog.UninstallProgHandler(*appUninstall)
+		aptprog.UninstallProgHandler(*appUninstall, "")
 	}
 
 	if *appUpgrade != "" {
-		aptprog.UpgradeProgHandler(*appUpgrade)
+		aptprog.UpgradeProgHandler(*appUpgrade, "")
 	}
 
 	if *appKill != "" {
-		aptprog.KillProcessHandler(*appKill)
+		aptprog.KillProcessHandler(*appKill, "")
 	}
+
+	handleRequests()
 }

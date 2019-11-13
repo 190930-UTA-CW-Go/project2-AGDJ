@@ -16,9 +16,10 @@ import (
 
 //ButlerInfoStruct will be used to pass vital butler client information
 type ButlerInfoStruct struct {
-	Lscpu    lscpu.LSCPU
+	Lscpu    lscpu.LSCPU       `json:"LSCPU"`
 	CPUUsage cpuusage.CPUUsage `json:"CPUUSAGE"`
 	Cpumem   cpumem.CPUTOP     `json:"CPUMEM"`
+	Apps     []AptProgsStruct  `json:"APPS"`
 }
 
 // UserInfo =
@@ -39,28 +40,23 @@ type Super struct {
 	Count    []int
 }
 
+//////////// main function /////////////////
 func main() {
 	Post("david", "chang")
+	//testing if PostProgram will install a single application
+	// var wyrd []AptProgsStruct
+	// wyrd = append(wyrd, AptProgsStruct{Name: "wyrd", Desc: "Description dont matter"})
+	// PostProgramsToInstall(wyrd)
 
 	//////////////////
 	serveAndListen()
 }
-func getWorkerInfo() ButlerInfoStruct {
-	fmt.Println("start application getting worker info")
-	response, err := http.Get("http://localhost:8080/getbutlerinfo")
-	var infoHolder ButlerInfoStruct
-	if err != nil {
-		fmt.Printf("HTTp request failed with err %s\n", err)
-	} else {
-		data, _ := ioutil.ReadAll(response.Body)
-		json.Unmarshal(data, &infoHolder)
-	}
-	return infoHolder
-}
 
+//////////////////// Front End Functions //////////////////
 func serveAndListen() {
 	http.Handle("/", http.FileServer(http.Dir("server")))
 	http.HandleFunc("/open", open)
+	http.HandleFunc("/installapps", installApps)
 	http.ListenAndServe(":8081", nil)
 }
 
@@ -89,7 +85,20 @@ func open(w http.ResponseWriter, r *http.Request) {
 	log.Println(temp.Execute(w, superMan))
 }
 
-// Post =
+func installApps(w http.ResponseWriter, r *http.Request) {
+	temp, err := template.ParseFiles("server/templates/installapps.html")
+	if err != nil {
+		log.Println("error in install Apps")
+	}
+	holder := getWorkerInfo()
+	// fmt.Println(holder.Apps)
+	log.Println(temp.Execute(w, holder))
+	// temp.Execute(w, holder)
+}
+
+///////////////////// API FUNCTIONS ///////////////////////////////////
+
+// Post function was the first triel of server sending post
 func Post(username string, password string) {
 	infoData := &UserInfo{
 		Username: username,
@@ -106,4 +115,37 @@ func Post(username string, password string) {
 		panic(err)
 	}
 	defer resp.Body.Close()
+}
+
+//PostProgramsToInstall will send program list of things to be installed
+func PostProgramsToInstall(install []AptProgsStruct) {
+	marshData, err := json.Marshal(install)
+	if err != nil {
+		log.Println("Marshaling program installation went wrong")
+	}
+	url := "http://localhost:8080/install"
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(marshData))
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Println("client sending install list fail")
+	}
+	defer resp.Body.Close()
+	fmt.Println("Sent List")
+}
+
+//Gets information from remote server
+func getWorkerInfo() ButlerInfoStruct {
+	fmt.Println("start application getting worker info")
+	response, err := http.Get("http://localhost:8080/getbutlerinfo")
+	var infoHolder ButlerInfoStruct
+	if err != nil {
+		fmt.Printf("HTTP request failed with err %s\n", err)
+	} else {
+		data, _ := ioutil.ReadAll(response.Body)
+		json.Unmarshal(data, &infoHolder)
+	}
+	return infoHolder
 }
