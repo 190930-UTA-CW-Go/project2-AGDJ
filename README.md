@@ -1,11 +1,13 @@
 # project2-AGDJ
 
-
-
-
-## Download crypto package
-```bash
+## Download packages
+```go
 go get golang.org/x/crypto/ssh
+go get github.com/gorilla/mux
+```
+
+```bash
+sudo apt install sysstat
 ```
 
 ```bash
