@@ -44,7 +44,7 @@ func getWorkerInfo() ButlerInfoStruct {
 	response, err := http.Get("http://localhost:8080/getbutlerinfo")
 	var infoHolder ButlerInfoStruct
 	if err != nil {
-		fmt.Printf("HTTp request failed with err %s\n", err)
+		fmt.Printf("HTTP request failed with err %s\n", err)
 	} else {
 		data, _ := ioutil.ReadAll(response.Body)
 		json.Unmarshal(data, &infoHolder)

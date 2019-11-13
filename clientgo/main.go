@@ -19,10 +19,10 @@ import (
 
 //ButlerInfoStruct will be used to pass vital butler client information
 type ButlerInfoStruct struct {
-	Lscpu    lscpu.LSCPU       `json:"LSCPU"`
-	CPUUsage cpuusage.CPUUsage `json:"CPUUSAGE"`
-	Cpumem   cpumem.CPUTOP     `json:"CPUMEM"`
-	Apps     []AptProgsStruct  `json:"APPS"`
+	Lscpu    lscpu.LSCPU              `json:"LSCPU"`
+	CPUUsage cpuusage.CPUUsage        `json:"CPUUSAGE"`
+	Cpumem   cpumem.CPUTOP            `json:"CPUMEM"`
+	Apps     []aptprog.AptProgsStruct `json:"APPS"`
 }
 
 // UserInfo =
@@ -31,19 +31,13 @@ type UserInfo struct {
 	Password string `json:"password"`
 }
 
-//AptProgsStruct lists all the
-type AptProgsStruct struct {
-	Name string `json:"APPNAME"`
-	Desc string `json:"DESC"`
-}
-
 func getButlerInfo(w http.ResponseWriter, r *http.Request) {
 	cpumem.CreateTopSnapshot()
 	cpuusage.CreateCPUUsage()
 	lscpu.CreateLSCPUFILE()
 	butlerHolder := ButlerInfoStruct{
 		Lscpu: lscpu.ReadLSCPUCommand(), CPUUsage: cpuusage.GetCPUUsage(),
-		Cpumem: cpumem.GetTopSnapshot(),
+		Cpumem: cpumem.GetTopSnapshot(), Apps: aptprog.GetSearchInfo(),
 	}
 	json.NewEncoder(w).Encode(butlerHolder)
 }
@@ -78,7 +72,6 @@ func handleRequests() {
 }
 
 func main() {
-	handleRequests()
 	appSearch := flag.Bool("search", false, "searches for program")
 	appInstall := flag.String("install", "", "install programs using apt")
 	appUninstall := flag.String("uninstall", "", "uninstall programs using apt")
@@ -116,4 +109,6 @@ func main() {
 	if *appKill != "" {
 		aptprog.KillProcessHandler(*appKill)
 	}
+
+	handleRequests()
 }
