@@ -82,16 +82,22 @@ func InstallProgHandler(appname string, pw string) {
 }
 
 // UpgradeProgHandler upgrades the program to the latest version in apt
-func UpgradeProgHandler(appname string) {
-	exec.Command("sudo", "apt", "upgrade", "-y", appname).Run()
+func UpgradeProgHandler(appname string, pw string) {
+	//exec.Command("sudo", "apt", "upgrade", "-y", appname).Run()
+	cmd := "echo " + pw + " | sudo -S apt upgrade -y " + appname
+	exec.Command("bash", "-c", cmd).Run()
 }
 
 // UninstallProgHandler removes the program that is passed in
-func UninstallProgHandler(appname string) {
-	exec.Command("sudo", "apt", "purge", "-y", appname).Run()
+func UninstallProgHandler(appname string, pw string) {
+	//exec.Command("sudo", "apt", "purge", "-y", appname).Run()
+	cmd := "echo " + pw + " | sudo -S apt purge -y " + appname
+	exec.Command("bash", "-c", cmd).Run()
 }
 
 // KillProcessHandler kills process
-func KillProcessHandler(procid string) {
-	exec.Command("sudo", "kill", procid).Run()
+func KillProcessHandler(procid string, pw string) {
+	//exec.Command("sudo", "kill", procid).Run()
+	cmd := "echo " + pw + " | sudo -S apt kill " + procid
+	exec.Command("bash", "-c", cmd).Run()
 }

@@ -130,15 +130,15 @@ func main() {
 	}
 
 	if *appUninstall != "" {
-		aptprog.UninstallProgHandler(*appUninstall)
+		aptprog.UninstallProgHandler(*appUninstall, "")
 	}
 
 	if *appUpgrade != "" {
-		aptprog.UpgradeProgHandler(*appUpgrade)
+		aptprog.UpgradeProgHandler(*appUpgrade, "")
 	}
 
 	if *appKill != "" {
-		aptprog.KillProcessHandler(*appKill)
+		aptprog.KillProcessHandler(*appKill, "")
 	}
 
 	handleRequests()
