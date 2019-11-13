@@ -31,19 +31,16 @@
 
   <div class="container">
   <h1>Select an option</h1>
+    {{range $val := (.Count) }}
     <div class="form-check">        
-        <input class="form-check-input" type="radio" name="colorRadio" id="option1" value="red"> 
-        <label class="form-check-label" for="option1">Option 1</label>
+        <input class="form-check-input" type="radio" name="colorRadio" id="option{{$val}}" value="red"> 
+        <label class="form-check-label" for="option{{$val}}">Machine #{{$val}}</label>
     </div>
-    <div class="form-check">
-        <input class="form-check-input" type="radio" name="colorRadio" id="option2" value="green">
-        <label class="form-check-label" for="option2">Option 2</label>
+    {{end}}
     </div>
-    <div class="form-check">
-        <input class="form-check-input" type="radio" name="colorRadio" id="option3" value="blue">
-        <label class="form-check-label" for="option3">Option 3</label>
-    </div>
-    </div>
+
+    {{ range $key, $value := .Machines }}
+
     <div class="red box">
         <table class="table table-borderless table-dark">
                     <h1>SYSTEM INFORMATION</h1>
@@ -55,9 +52,9 @@
                     </thead>
                     <tbody>
                         <tr>
-                            {{ range $key, $value := (.CPUUsage.Usage) }}
-                            <td><div>{{ $key }}</div></td>
-                            <td><div>{{ $value }}</div></td>
+                            {{ range $k, $v := $value.CPUUsage.Usage }}
+                            <td><div>{{ $k }}</div></td>
+                            <td><div>{{ $v }}</div></td>
                         </tr>
                             {{ end }}
                     </tbody>
@@ -74,16 +71,16 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><div>{{ .Lscpu.Architecture }}</div></td>
-                            <td><div>{{ .Lscpu.CPUopmode }}</div></td>
-                            <td><div>{{ .Lscpu.CPUs }}</div></td>
-                            <td><div>{{ .Lscpu.ThreadsPerCore }}</div></td>
-                            <td><div>{{ .Lscpu.VendorID }}</div></td>
-                            <td><div>{{ .Lscpu.ModelName }}</div></td>
-                            <td><div>{{ .Lscpu.CPUMHz }}</div></td>
-                            <td><div>{{ .Lscpu.CPUmaxMHz }}</div></td>
-                            <td><div>{{ .Lscpu.CPUminMHz }}</div></td>
-                            <td><div>{{ .Lscpu.Virtualization }}</div></td>
+                            <td><div>{{ $value.Lscpu.Architecture }}</div></td>
+                            <td><div>{{ $value.Lscpu.CPUopmode }}</div></td>
+                            <td><div>{{ $value.Lscpu.CPUs }}</div></td>
+                            <td><div>{{ $value.Lscpu.ThreadsPerCore }}</div></td>
+                            <td><div>{{ $value.Lscpu.VendorID }}</div></td>
+                            <td><div>{{ $value.Lscpu.ModelName }}</div></td>
+                            <td><div>{{ $value.Lscpu.CPUMHz }}</div></td>
+                            <td><div>{{ $value.Lscpu.CPUmaxMHz }}</div></td>
+                            <td><div>{{ $value.Lscpu.CPUminMHz }}</div></td>
+                            <td><div>{{ $value.Lscpu.Virtualization }}</div></td>
                         </tr>
                     </tbody>
         </table>
@@ -113,25 +110,27 @@
             </thead>
             <tbody>
                 <tr>
-                    {{ range $key, $value := (.Cpumem.Processes) }}
-                    <td><div> {{ $value.PID }} </div></td>
-                    <td><div> {{ $value.User }} </div></td>
-                    <td><div> {{ $value.PR }} </div></td>
-                    <td><div> {{ $value.NI }} </div></td>
-                    <td><div> {{ $value.VIRT }} </div></td>
-                    <td><div> {{ $value.RES }} </div></td>
-                    <td><div> {{ $value.SHR }} </div></td>
-                    <td><div> {{ $value.S }} </div></td>
-                    <td><div> {{ $value.CPU }} </div></td>
-                    <td><div> {{ $value.MEM }} </div></td>
-                    <td><div> {{ $value.TIME }} </div></td>
-                    <td><div> {{ $value.Command }} </div></td>
+                    {{ range $key, $v := $value.Cpumem.Processes }}
+                    <td><div> {{ $v.PID }} </div></td>
+                    <td><div> {{ $v.User }} </div></td>
+                    <td><div> {{ $v.PR }} </div></td>
+                    <td><div> {{ $v.NI }} </div></td>
+                    <td><div> {{ $v.VIRT }} </div></td>
+                    <td><div> {{ $v.RES }} </div></td>
+                    <td><div> {{ $v.SHR }} </div></td>
+                    <td><div> {{ $v.S }} </div></td>
+                    <td><div> {{ $v.CPU }} </div></td>
+                    <td><div> {{ $v.MEM }} </div></td>
+                    <td><div> {{ $v.TIME }} </div></td>
+                    <td><div> {{ $v.Command }} </div></td>
                 </tr>
                     {{ end  }}
             </tbody>
         </table> 
-       
-       
+
+        {{ end }}
+    
+        
         
     </div>
     <div class="green box">
