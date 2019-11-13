@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html class="bg-dark text-white">
+    <head>
+            <title>Search Page</title>
+    </head>
+    <body class="bg-dark text-white">
+        <h1>Pods</h1>
+        <div class="table-wrapper form-check" style="overflow: hidden; overflow-y: scroll;height: 450px;">
+        <table>
+                <thead>
+                        <th>Programs</th>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .Apps}}
+                    <tr>
+                        <td><input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">{{.Name}}</td>
+                        <td>{{.Desc}}</td>
+                    </tr>
+                    {{end}}
+                </tbody>
+        </table>
+        </div>
+    </body>
+</html>
