@@ -33,6 +33,12 @@ type AptProgsStruct struct {
 	Desc string `json:"DESC"`
 }
 
+// Super =
+type Super struct {
+	Machines []ButlerInfoStruct
+	Count    []int
+}
+
 func main() {
 	Post("david", "chang")
 
@@ -64,8 +70,23 @@ func open(w http.ResponseWriter, r *http.Request) {
 		log.Println("this code sucks")
 	}
 	holder := getWorkerInfo()
+
+	/////////////////////
+
+	var count int = 5
+	var manyButlers []ButlerInfoStruct
+	for i := 0; i < count; i++ {
+		manyButlers = append(manyButlers, holder)
+	}
+
+	var numMachines []int
+	for i := 1; i <= len(manyButlers); i++ {
+		numMachines = append(numMachines, i)
+	}
+	superMan := Super{manyButlers, numMachines}
+
 	fmt.Println(holder.Lscpu.Architecture)
-	log.Println(temp.Execute(w, holder))
+	log.Println(temp.Execute(w, superMan))
 }
 
 // Post =
