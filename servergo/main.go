@@ -82,7 +82,6 @@ func Post(username string, password string) {
 		panic(err)
 	}
 	defer resp.Body.Close()
-	fmt.Println("Sent List")
 }
 
 //PostProgramsToInstall will send program list of things to be installed
@@ -101,6 +100,7 @@ func PostProgramsToInstall(install []AptProgsStruct) {
 		log.Println("client sending install list fail")
 	}
 	defer resp.Body.Close()
+	fmt.Println("Sent List")
 }
 
 //Gets information from remote server
