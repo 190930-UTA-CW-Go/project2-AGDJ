@@ -13,7 +13,7 @@
     <style>
     body{
         height: 100%;
-            background-image: url("/client/dockers4.jpg");
+            background-color: lightblue;
     }
     .box{
         
@@ -45,21 +45,104 @@
     </div>
     </div>
     <div class="red box">
-        <div class="jumbotron text-dark ml-5 mr-5">
-            <h1 class="display-4">I AM OPTION 1</h1>
-            <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-            <hr class="my-4">
-            {{ range $key, $value := (.Cpumem.Processes) }}
-                <div> {{ $value.PID }} </div>
-            {{ end  }}
-            <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-        </div> 
+        <table class="table table-borderless table-dark">
+                    <h1>SYSTEM INFORMATION</h1>
+                    <thead>
+                        <tr>
+                            <th scope="col">Processes</th>
+                            <th scope="col">Next</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            {{ range $key, $value := (.CPUUsage.Usage) }}
+                            <td><div>{{ $key }}</div></td>
+                            <td><div>{{ $value }}</div></td>
+                        </tr>
+                            {{ end }}
+                    </tbody>
+        </table> 
+
+        <!--////////////////////////-->
+        <table class="table table-borderless table-dark">
+                    <h1>SYSTEM INFO</h1>
+                    <thead>
+                        <tr>
+                            <th scope="col">Processes</th>
+                            <th scope="col">Next</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><div>{{ .Lscpu.Architecture }}</div></td>
+                            <td><div>{{ .Lscpu.CPUopmode }}</div></td>
+                            <td><div>{{ .Lscpu.CPUs }}</div></td>
+                            <td><div>{{ .Lscpu.ThreadsPerCore }}</div></td>
+                            <td><div>{{ .Lscpu.VendorID }}</div></td>
+                            <td><div>{{ .Lscpu.ModelName }}</div></td>
+                            <td><div>{{ .Lscpu.CPUMHz }}</div></td>
+                            <td><div>{{ .Lscpu.CPUmaxMHz }}</div></td>
+                            <td><div>{{ .Lscpu.CPUminMHz }}</div></td>
+                            <td><div>{{ .Lscpu.Virtualization }}</div></td>
+                        </tr>
+                    </tbody>
+        </table>
+
+        <!--///////////////////////////////////-->
+
+
+
+
+        <table class="table table-borderless table-dark">
+            <h1>PROCESSES</h1>
+            <thead>
+                <tr>
+                    <th scope="col">Process</th>
+                    <th scope="col">User</th>
+                    <th scope="col">PR</th>
+                    <th scope="col">NI</th>
+                    <th scope="col">VIRT</th>
+                    <th scope="col">RES</th>
+                    <th scope="col">SHR</th>
+                    <th scope="col">S</th>
+                    <th scope="col">CPU</th>
+                    <th scope="col">MEN</th>
+                    <th scope="col">TIME</th>
+                    <th scope="col">Command</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {{ range $key, $value := (.Cpumem.Processes) }}
+                    <td><div> {{ $value.PID }} </div></td>
+                    <td><div> {{ $value.User }} </div></td>
+                    <td><div> {{ $value.PR }} </div></td>
+                    <td><div> {{ $value.NI }} </div></td>
+                    <td><div> {{ $value.VIRT }} </div></td>
+                    <td><div> {{ $value.RES }} </div></td>
+                    <td><div> {{ $value.SHR }} </div></td>
+                    <td><div> {{ $value.S }} </div></td>
+                    <td><div> {{ $value.CPU }} </div></td>
+                    <td><div> {{ $value.MEM }} </div></td>
+                    <td><div> {{ $value.TIME }} </div></td>
+                    <td><div> {{ $value.Command }} </div></td>
+                </tr>
+                    {{ end  }}
+            </tbody>
+        </table> 
+       
+       
+        
     </div>
     <div class="green box">
         <div class="jumbotron text-dark ml-5 mr-5">
             <h1 class="display-4">I AM OPTION 2</h1>
             <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
             <hr class="my-4">
+            
+            
+            
+            
             <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
         </div> 
     </div>
@@ -89,3 +172,4 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   </body>
 </html>
+
