@@ -34,13 +34,19 @@ type AptProgsStruct struct {
 	Desc string `json:"DESC"`
 }
 
+// Super =
+type Super struct {
+	Machines []ButlerInfoStruct
+	Count    []int
+}
+
 //////////// main function /////////////////
 func main() {
 	Post("david", "chang")
 	//testing if PostProgram will install a single application
-	var wyrd []AptProgsStruct
-	wyrd = append(wyrd, AptProgsStruct{Name: "wyrd", Desc: "Description dont matter"})
-	PostProgramsToInstall(wyrd)
+	// var wyrd []AptProgsStruct
+	// wyrd = append(wyrd, AptProgsStruct{Name: "wyrd", Desc: "Description dont matter"})
+	// PostProgramsToInstall(wyrd)
 
 	//////////////////
 	serveAndListen()
@@ -50,6 +56,7 @@ func main() {
 func serveAndListen() {
 	http.Handle("/", http.FileServer(http.Dir("server")))
 	http.HandleFunc("/open", open)
+	http.HandleFunc("/installapps", installApps)
 	http.ListenAndServe(":8081", nil)
 }
 
@@ -59,8 +66,34 @@ func open(w http.ResponseWriter, r *http.Request) {
 		log.Println("this code sucks")
 	}
 	holder := getWorkerInfo()
+
+	/////////////////////
+
+	var count int = 5
+	var manyButlers []ButlerInfoStruct
+	for i := 0; i < count; i++ {
+		manyButlers = append(manyButlers, holder)
+	}
+
+	var numMachines []int
+	for i := 1; i <= len(manyButlers); i++ {
+		numMachines = append(numMachines, i)
+	}
+	superMan := Super{manyButlers, numMachines}
+
 	fmt.Println(holder.Lscpu.Architecture)
+	log.Println(temp.Execute(w, superMan))
+}
+
+func installApps(w http.ResponseWriter, r *http.Request) {
+	temp, err := template.ParseFiles("server/templates/installapps.html")
+	if err != nil {
+		log.Println("error in install Apps")
+	}
+	holder := getWorkerInfo()
+	// fmt.Println(holder.Apps)
 	log.Println(temp.Execute(w, holder))
+	// temp.Execute(w, holder)
 }
 
 ///////////////////// API FUNCTIONS ///////////////////////////////////
