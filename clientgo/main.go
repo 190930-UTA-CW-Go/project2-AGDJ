@@ -86,8 +86,10 @@ func ProgramsToInstall(w http.ResponseWriter, r *http.Request) {
 func BatchInstall(hold []aptprog.AptProgsStruct) {
 	for _, k := range hold {
 		// aptprog.InstallProgHandler(k.Name)
+		fmt.Println(k.Name + "installing ...")
 		aptprog.InstallProgHandler(k.Name, "")
 	}
+	fmt.Println("Done")
 	log.Println("Successful installation of programs")
 }
 
