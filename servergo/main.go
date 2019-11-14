@@ -26,12 +26,6 @@ type ButlerInfoStruct struct {
 	Apps     []aptprog.AptProgsStruct `json:"APPS"`
 }
 
-// UserInfo =
-type UserInfo struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
 // Super holds slice of client data and slice used for count
 type Super struct {
 	Machines []ButlerInfoStruct
