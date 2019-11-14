@@ -70,12 +70,6 @@ func open(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("this code sucks")
 	}
-	//holder holds SUper Structure
-	var superHolder Super
-	for _, val := range clients {
-		superHolder.Machines = append(superHolder.Machines, getWorkerInfo(val))
-		superHolder.Count = append(superHolder.Count, 1)
-	}
 	/////////////////////
 	fmt.Println(superHolder.Machines[0].Lscpu)
 	log.Println(temp.Execute(w, superHolder))
