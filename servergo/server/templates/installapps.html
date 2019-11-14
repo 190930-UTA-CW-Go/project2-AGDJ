@@ -5,7 +5,16 @@
     </head>
     <body class="bg-dark text-white">
         <h1>Pods</h1>
-        <div class="table-wrapper form-check" style="overflow: hidden; overflow-y: scroll;height: 450px;">
+        <form class="bg-dark text-white" method="GET" action="/typedprogs">
+                
+            <div class="form-group">
+                <label for="inputProgram2">What program(s) do you to install:</label>
+                <input type="text" class="form-control" id="programs" placeholder="Program Name Ex. golang, golang-1.10" name="pname">
+            </div>
+            <button type="submit" class="btn btn-outline-success">Install</button>
+            
+        </form>
+        <!--<div class="table-wrapper form-check" style="overflow: hidden; overflow-y: scroll;height: 450px;">
         <table>
                 <thead>
                         <th>Programs</th>
@@ -23,6 +32,6 @@
                     {{end}}
                 </tbody>
         </table>
-        </div>
+        </div> -->
     </body>
 </html>

@@ -82,10 +82,12 @@ func InstallProgHandler(appname string, pw string) {
 }
 
 // UpgradeProgHandler upgrades the program to the latest version in apt
-func UpgradeProgHandler(appname string, pw string) {
+func UpgradeProgHandler(pw string) {
 	//exec.Command("sudo", "apt", "upgrade", "-y", appname).Run()
-	cmd := "echo " + pw + " | sudo -S apt upgrade -y " + appname
+	cmd := "echo " + pw + " | sudo -S apt update "
 	exec.Command("bash", "-c", cmd).Run()
+	cmd2 := "echo " + pw + " | sudo -S apt upgrade -y "
+	exec.Command("bash", "-c", cmd2).Run()
 }
 
 // UninstallProgHandler removes the program that is passed in
