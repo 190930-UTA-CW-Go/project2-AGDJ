@@ -85,9 +85,10 @@ func ProgramsToInstall(w http.ResponseWriter, r *http.Request) {
 //BatchInstall will Install a bathc of passed in programs.
 func BatchInstall(hold []aptprog.AptProgsStruct) {
 	for _, k := range hold {
-		aptprog.InstallProgHandler(k.Name)
+		// aptprog.InstallProgHandler(k.Name)
+		aptprog.InstallProgHandler(k.Name, "")
 	}
-	log.Println("Succsessful installation of programs")
+	log.Println("Successful installation of programs")
 }
 
 //////////////////////// HTTP SERVER HERE //////////////////
@@ -124,19 +125,20 @@ func main() {
 	}
 
 	if *appInstall != "" {
-		aptprog.InstallProgHandler(*appInstall)
+		// aptprog.InstallProgHandler(*appInstall)
+		aptprog.InstallProgHandler(*appInstall, "")
 	}
 
 	if *appUninstall != "" {
-		aptprog.UninstallProgHandler(*appUninstall)
+		aptprog.UninstallProgHandler(*appUninstall, "")
 	}
 
 	if *appUpgrade != "" {
-		aptprog.UpgradeProgHandler(*appUpgrade)
+		aptprog.UpgradeProgHandler(*appUpgrade, "")
 	}
 
 	if *appKill != "" {
-		aptprog.KillProcessHandler(*appKill)
+		aptprog.KillProcessHandler(*appKill, "")
 	}
 
 	handleRequests()
