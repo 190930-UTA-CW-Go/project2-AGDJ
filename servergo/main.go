@@ -19,11 +19,15 @@ import (
 
 //ButlerInfoStruct will be used to pass vital butler client information
 type ButlerInfoStruct struct {
-	Sysinfo  sysinfo.SysInfo          `json:"SYSINFO"`
-	Lscpu    lscpu.LSCPU              `json:"LSCPU"`
-	CPUUsage cpuusage.CPUUsage        `json:"CPUUSAGE"`
-	Cpumem   cpumem.CPUTOP            `json:"CPUMEM"`
-	Apps     []aptprog.AptProgsStruct `json:"APPS"`
+	Sysinfo  sysinfo.SysInfo   `json:"SYSINFO"`
+	Lscpu    lscpu.LSCPU       `json:"LSCPU"`
+	CPUUsage cpuusage.CPUUsage `json:"CPUUSAGE"`
+	Cpumem   cpumem.CPUTOP     `json:"CPUMEM"`
+}
+
+//Apps will pass the apps.
+type Apps struct {
+	Apps []aptprog.AptProgsStruct `json:"APPS"`
 }
 
 // Super holds slice of client data and slice used for count
@@ -32,7 +36,7 @@ type Super struct {
 	Count    []int
 }
 
-var clients []string = []string{"40.69.155.213", "52.176.60.129"}
+var clients []string = []string{"localhost", "localhost"}
 var superHolder Super = getSuperHolder()
 
 //////////// main function /////////////////
@@ -130,6 +134,18 @@ func getWorkerInfo(ip string) ButlerInfoStruct {
 	fmt.Println("start application getting worker info")
 	var infoHolder ButlerInfoStruct
 	response, err := http.Get("http://" + ip + ":8080/getbutlerinfo")
+	if err != nil {
+		fmt.Printf("HTTP request failed with err %s\n", err)
+	} else {
+		data, _ := ioutil.ReadAll(response.Body)
+		json.Unmarshal(data, &infoHolder)
+	}
+	return infoHolder
+}
+func getApps() Apps {
+	fmt.Println("start application getting worker info")
+	var infoHolder Apps
+	response, err := http.Get("http://" + clients[0] + ":8080/apps")
 	if err != nil {
 		fmt.Printf("HTTP request failed with err %s\n", err)
 	} else {
