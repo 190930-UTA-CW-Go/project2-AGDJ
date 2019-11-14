@@ -88,6 +88,7 @@ func BatchInstall(hold []aptprog.AptProgsStruct) {
 		// aptprog.InstallProgHandler(k.Name)
 		aptprog.InstallProgHandler(k.Name, "")
 	}
+	fmt.Println("Done")
 	log.Println("Successful installation of programs")
 }
 
@@ -97,6 +98,7 @@ func handleRequests() {
 	route.HandleFunc("/getbutlerinfo", getButlerInfo)
 	route.HandleFunc("/userinfo", userInfo)
 	route.HandleFunc("/install", ProgramsToInstall)
+	route.HandleFunc("/searchinstall", ProgramsToInstall)
 	log.Fatal(http.ListenAndServe(":8080", route))
 }
 

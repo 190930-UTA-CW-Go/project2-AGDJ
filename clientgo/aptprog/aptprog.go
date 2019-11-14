@@ -77,6 +77,7 @@ func GetSearchInfo() []AptProgsStruct {
 // func InstallProgHandler(appname string) {
 func InstallProgHandler(appname string, pw string) {
 	//exec.Command("sudo", "apt", "install", "-y", appname).Run()
+	fmt.Println("InstallProg installing", appname+"...")
 	cmd := "echo " + pw + " | sudo -S apt install -y " + appname
 	exec.Command("bash", "-c", cmd).Run()
 }
