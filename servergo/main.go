@@ -54,10 +54,33 @@ func main() {
 //////////////////// Front End Functions //////////////////
 func serveAndListen() {
 	http.Handle("/", http.FileServer(http.Dir("server")))
+	http.HandleFunc("/welcome", welcome)
+	http.HandleFunc("/register", register)
 	http.HandleFunc("/open", open)
 	http.HandleFunc("/installapps", installApps)
 	http.HandleFunc("/typedprogs", typedprogs)
 	http.ListenAndServe(":8081", nil)
+}
+
+func welcome(w http.ResponseWriter, r *http.Request) {
+	temp, err := template.ParseFiles("server/templates/welcome.html")
+	if err != nil {
+		log.Println(err)
+	}
+	temp.Execute(w, nil)
+}
+
+func register(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("METHOD:", r.Method)
+	switch r.Method {
+	case "POST":
+		r.ParseForm()
+		var username string = fmt.Sprint(r.Form["username"][0])
+		var password string = fmt.Sprint(r.Form["password"][0])
+		fmt.Println(username)
+		fmt.Println(password)
+	}
+	http.Redirect(w, r, "/welcome", http.StatusSeeOther)
 }
 
 func open(w http.ResponseWriter, r *http.Request) {
