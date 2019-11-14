@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/cpumem"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/cpuusage"
@@ -57,6 +58,7 @@ func serveAndListen() {
 	http.Handle("/", http.FileServer(http.Dir("server")))
 	http.HandleFunc("/open", open)
 	http.HandleFunc("/installapps", installApps)
+	http.HandleFunc("/typedprogs", typedprogs)
 	http.ListenAndServe(":8081", nil)
 }
 
@@ -94,6 +96,35 @@ func installApps(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println(holder.Apps)
 	log.Println(temp.Execute(w, holder))
 	// temp.Execute(w, holder)
+}
+
+// selected gets inputs passed in form and downloads programs
+func typedprogs(w http.ResponseWriter, r *http.Request) {
+	temp, err := template.ParseFiles("server/templates/typedprogs.html")
+	if err != nil {
+		log.Println("Error in typedprogs function template")
+	}
+	query := r.FormValue("pname")
+	query = strings.Replace(query, ",", "", -1)
+	programs := strings.Fields(query)
+	progs := make([]AptProgsStruct, 0)
+	for i := 0; i < len(programs); i++ {
+		progs = append(progs, AptProgsStruct{Name: programs[i]})
+	}
+	fmt.Println(progs)
+	infoByte, _ := json.Marshal(progs)
+	url := "http://localhost:8080/searchinstall"
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(infoByte))
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+	temp.Execute(w, progs)
 }
 
 ///////////////////// API FUNCTIONS ///////////////////////////////////
