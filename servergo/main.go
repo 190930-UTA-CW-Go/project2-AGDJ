@@ -10,17 +10,20 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/aptprog"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/cpumem"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/cpuusage"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/lscpu"
+	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/sysinfo"
 )
 
 //ButlerInfoStruct will be used to pass vital butler client information
 type ButlerInfoStruct struct {
-	Lscpu    lscpu.LSCPU       `json:"LSCPU"`
-	CPUUsage cpuusage.CPUUsage `json:"CPUUSAGE"`
-	Cpumem   cpumem.CPUTOP     `json:"CPUMEM"`
-	Apps     []AptProgsStruct  `json:"APPS"`
+	Sysinfo  sysinfo.SysInfo          `json:"SYSINFO"`
+	Lscpu    lscpu.LSCPU              `json:"LSCPU"`
+	CPUUsage cpuusage.CPUUsage        `json:"CPUUSAGE"`
+	Cpumem   cpumem.CPUTOP            `json:"CPUMEM"`
+	Apps     []aptprog.AptProgsStruct `json:"APPS"`
 }
 
 // UserInfo =
@@ -29,19 +32,13 @@ type UserInfo struct {
 	Password string `json:"password"`
 }
 
-//AptProgsStruct lists all the
-type AptProgsStruct struct {
-	Name string `json:"APPNAME"`
-	Desc string `json:"DESC"`
-}
-
 // Super holds slice of client data and slice used for count
 type Super struct {
 	Machines []ButlerInfoStruct
 	Count    []int
 }
 
-var clients []string = []string{"40.69.155.213", "40.113.242.181"}
+var clients []string = []string{"40.69.155.213", "52.176.60.129"}
 var superHolder Super = getSuperHolder()
 
 //////////// main function /////////////////
@@ -96,9 +93,9 @@ func typedprogs(w http.ResponseWriter, r *http.Request) {
 	query := r.FormValue("pname")
 	query = strings.Replace(query, ",", "", -1)
 	programs := strings.Fields(query)
-	progs := make([]AptProgsStruct, 0)
+	progs := make([]aptprog.AptProgsStruct, 0)
 	for i := 0; i < len(programs); i++ {
-		progs = append(progs, AptProgsStruct{Name: programs[i]})
+		progs = append(progs, aptprog.AptProgsStruct{Name: programs[i]})
 	}
 	fmt.Println(progs)
 	//installation here
@@ -109,14 +106,14 @@ func typedprogs(w http.ResponseWriter, r *http.Request) {
 ///////////////////// API FUNCTIONS ///////////////////////////////////
 
 //InstallOnClients installs selected applications on all the client machines
-func InstallOnClients(install []AptProgsStruct) {
+func InstallOnClients(install []aptprog.AptProgsStruct) {
 	for _, value := range clients {
 		PostProgramsToInstall(install, value)
 	}
 }
 
 //PostProgramsToInstall will send program list of things to be installed
-func PostProgramsToInstall(install []AptProgsStruct, ip string) {
+func PostProgramsToInstall(install []aptprog.AptProgsStruct, ip string) {
 	marshData, err := json.Marshal(install)
 	if err != nil {
 		log.Println("Marshaling program installation went wrong")

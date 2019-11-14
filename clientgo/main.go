@@ -14,11 +14,13 @@ import (
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/clientgo/cpumem"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/clientgo/cpuusage"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/clientgo/lscpu"
+	"github.com/190930-UTA-CW-Go/project2-AGDJ/clientgo/sysinfo"
 	"github.com/gorilla/mux"
 )
 
 //ButlerInfoStruct will be used to pass vital butler client information
 type ButlerInfoStruct struct {
+	Sysinfo  sysinfo.SysInfo          `json:"SYSINFO"`
 	Lscpu    lscpu.LSCPU              `json:"LSCPU"`
 	CPUUsage cpuusage.CPUUsage        `json:"CPUUSAGE"`
 	Cpumem   cpumem.CPUTOP            `json:"CPUMEM"`
@@ -32,12 +34,14 @@ type UserInfo struct {
 }
 
 func getButlerInfo(w http.ResponseWriter, r *http.Request) {
+	sysinfo.CreateSystemInfoFile2()
 	cpumem.CreateTopSnapshot()
 	cpuusage.CreateCPUUsage()
 	lscpu.CreateLSCPUFILE()
 	aptprog.SearchProgHandler()
 	butlerHolder := ButlerInfoStruct{
-		Lscpu: lscpu.ReadLSCPUCommand(), CPUUsage: cpuusage.GetCPUUsage(),
+		Sysinfo: sysinfo.ReadSysInfo(),
+		Lscpu:   lscpu.ReadLSCPUCommand(), CPUUsage: cpuusage.GetCPUUsage(),
 		Cpumem: cpumem.GetTopSnapshot(), Apps: aptprog.GetSearchInfo(),
 	}
 	json.NewEncoder(w).Encode(butlerHolder)
