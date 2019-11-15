@@ -11,5 +11,6 @@ create table ips(
 create table apps(
     name varchar,
     descrip varchar
-)
+);
 
+insert into users (username, password) values ('godfrey', 'hello');

@@ -14,6 +14,7 @@ import (
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/cpumem"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/cpuusage"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/lscpu"
+	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/server"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/sysinfo"
 )
 
@@ -37,12 +38,15 @@ type Super struct {
 }
 
 var clients []string = []string{"52.176.60.129", "40.69.155.213"}
+
+// var clients []string = []string{"localhost"}
 var superHolder Super = getSuperHolder()
 var appsHolder Apps = getApps()
 
 //////////// main function /////////////////
 func main() {
 	// Post("david", "chang")
+	server.StartDB()
 
 	//////////////////
 	serveAndListen()
@@ -53,7 +57,8 @@ func serveAndListen() {
 	http.Handle("/", http.FileServer(http.Dir("server")))
 	http.HandleFunc("/welcome", welcome)
 	http.HandleFunc("/register", register)
-	http.HandleFunc("/open", open)
+	//http.HandleFunc("/open", open)
+	http.HandleFunc("/signin", enter)
 	http.HandleFunc("/installapps", installApps)
 	http.HandleFunc("/typedprogs", typedprogs)
 	http.HandleFunc("/uninstall", uninstall)
@@ -75,10 +80,29 @@ func register(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		var username string = fmt.Sprint(r.Form["username"][0])
 		var password string = fmt.Sprint(r.Form["password"][0])
-		fmt.Println(username)
-		fmt.Println(password)
+		server.CreateAccount(username, password)
 	}
 	http.Redirect(w, r, "/welcome", http.StatusSeeOther)
+}
+
+func enter(w http.ResponseWriter, r *http.Request) {
+	// temp, err := template.ParseFiles("index.html")
+	// if err != nil {
+	// 	log.Println("uuuupppsss")
+	// }
+	var username = r.FormValue("username")
+	var pass = r.FormValue("pw")
+
+	fmt.Println(username)
+	fmt.Println(pass)
+	trigger := server.SignIn(username, pass)
+	if trigger == true {
+		http.Redirect(w, r, "/welcome", http.StatusSeeOther)
+
+	} else {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
+	// log.Println(temp.Execute(w, server.SignIn))
 }
 
 func open(w http.ResponseWriter, r *http.Request) {
