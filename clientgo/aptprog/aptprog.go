@@ -18,6 +18,7 @@ type AptProgsStruct struct {
 // SearchProgHandler searches apt for specified program user searches for and puts it inside a text file
 func SearchProgHandler() {
 	searchFile := os.ExpandEnv("$HOME/searchapps.txt")
+	exec.Command("bash", "-c", "sudo rm"+searchFile+" -y").Run()
 	file, err := os.OpenFile(searchFile, os.O_CREATE|os.O_WRONLY|os.O_RDONLY, 0666)
 	if err != nil {
 		log.Println(err)
@@ -75,10 +76,11 @@ func GetSearchInfo() []AptProgsStruct {
 }
 
 func def() {
-	fmt.Println("Program Panicked out!")
+	fmt.Println("defer started")
 	if r := recover(); r != nil {
-		fmt.Println("WHy is it breaking though")
+		fmt.Println("recovered from panic")
 	}
+	fmt.Println("defer closed")
 }
 
 // InstallProgHandler installs the program that is passed in

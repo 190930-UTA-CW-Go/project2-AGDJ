@@ -120,10 +120,11 @@ func BatchInstall(hold []aptprog.AptProgsStruct) {
 }
 
 func def() {
-	fmt.Println("Program Panicked out!")
+	fmt.Println("defer started")
 	if r := recover(); r != nil {
-		fmt.Println("WHy is it breaking though")
+		fmt.Println("recovered from panic")
 	}
+	fmt.Println("defer closed")
 }
 
 //////////////////////// HTTP SERVER HERE //////////////////
