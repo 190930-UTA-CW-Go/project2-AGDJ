@@ -2,13 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
-	"os/exec"
 
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/clientgo/aptprog"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/clientgo/cpumem"
@@ -32,14 +29,23 @@ type Apps struct {
 }
 
 func getApps(w http.ResponseWriter, r *http.Request) {
+	defer def()
 	aptprog.SearchProgHandler()
+	//see maybe file doesnt get created in time
+	//check if asynchronous
 	holder := Apps{
 		Apps: aptprog.GetSearchInfo(),
 	}
-	json.NewEncoder(w).Encode(holder)
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	err := json.NewEncoder(w).Encode(holder)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func getButlerInfo(w http.ResponseWriter, r *http.Request) {
+	defer def()
 	sysinfo.CreateSystemInfoFile2()
 	cpumem.CreateTopSnapshot()
 	cpuusage.CreateCPUUsage()
@@ -49,6 +55,8 @@ func getButlerInfo(w http.ResponseWriter, r *http.Request) {
 		Lscpu:   lscpu.ReadLSCPUCommand(), CPUUsage: cpuusage.GetCPUUsage(),
 		Cpumem: cpumem.GetTopSnapshot(),
 	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(butlerHolder)
 }
 
@@ -111,6 +119,14 @@ func BatchInstall(hold []aptprog.AptProgsStruct) {
 	log.Println("Successful installation of program/s")
 }
 
+func def() {
+	fmt.Println("defer started")
+	if r := recover(); r != nil {
+		fmt.Println("recovered from panic")
+	}
+	fmt.Println("defer closed")
+}
+
 //////////////////////// HTTP SERVER HERE //////////////////
 func handleRequests() {
 	route := mux.NewRouter().StrictSlash(true)
@@ -123,44 +139,5 @@ func handleRequests() {
 
 ////////////////////// MAIN FUNCTION HERE ///////////////////
 func main() {
-	appSearch := flag.Bool("search", false, "searches for program")
-	appInstall := flag.String("install", "", "install programs using apt")
-	appUninstall := flag.String("uninstall", "", "uninstall programs using apt")
-	appUpgrade := flag.String("upgrade", "", "upgrade programs using apt")
-	appKill := flag.String("kill", "", "kills a process based on id")
-	appCreateReport := flag.Bool("report", false, "return a report on the system")
-	flag.Parse()
-
-	if *appCreateReport {
-		systemInfoLoc := os.ExpandEnv("$HOME/lscpuvar.txt")
-		cpuUsageLoc := os.ExpandEnv("$HOME/cpupercentage.txt")
-		cpumemLoc := os.ExpandEnv("$HOME/cpumem.txt")
-		cpumem.CreateTopSnapshot()
-		cpuusage.CreateCPUUsage()
-		lscpu.CreateLSCPUFILE()
-		exec.Command("bash", "-c", "cat "+systemInfoLoc+" "+cpuUsageLoc+" "+cpumemLoc+">> "+os.ExpandEnv("$HOME")+"/superinfo.txt").Run()
-	}
-
-	if *appSearch {
-		aptprog.SearchProgHandler()
-	}
-
-	if *appInstall != "" {
-		// aptprog.InstallProgHandler(*appInstall)
-		aptprog.InstallProgHandler(*appInstall, "")
-	}
-
-	if *appUninstall != "" {
-		aptprog.UninstallProgHandler(*appUninstall, "")
-	}
-
-	if *appUpgrade != "" {
-		aptprog.UpgradeProgHandler("")
-	}
-
-	if *appKill != "" {
-		aptprog.KillProcessHandler(*appKill, "")
-	}
-
 	handleRequests()
 }
