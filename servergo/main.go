@@ -38,8 +38,9 @@ type Super struct {
 	Count    []int
 }
 
-//var clients []string = []string{"52.176.60.129", "40.69.155.213"}
-var clients []string = []string{"localhost"}
+var clients []string = []string{"52.176.60.129", "40.69.155.213"}
+
+//var clients []string = []string{"localhost"}
 var superHolder Super = getSuperHolder()
 var appsHolder Apps = getApps()
 
@@ -107,8 +108,12 @@ func newMachine(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		var ipAddress string = fmt.Sprint(r.Form["ipAddress"][0])
 		fmt.Println("Ip Address:", ipAddress)
-		//server.AddMachine(ipAddress)
-		//PostProgramsToInstall("something", ipAddress)
+		progs := make([]aptprog.AptProgsStruct, 0)
+		downloaded := server.QueryAllInstalled()
+		for i := 0; i < len(downloaded); i++ {
+			progs = append(progs, aptprog.AptProgsStruct{Name: downloaded[i]})
+		}
+		PostProgramsToInstall(progs, ipAddress)
 	}
 	http.Redirect(w, r, "/welcome", http.StatusSeeOther)
 }
