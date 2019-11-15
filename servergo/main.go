@@ -54,12 +54,14 @@ func serveAndListen() {
 	http.Handle("/", http.FileServer(http.Dir("server")))
 	http.HandleFunc("/welcome", welcome)
 	http.HandleFunc("/register", register)
-	http.HandleFunc("/open", open)
+	//http.HandleFunc("/open", open)
+	http.HandleFunc("/signin", enter)
 	http.HandleFunc("/installapps", installApps)
 	http.HandleFunc("/typedprogs", typedprogs)
 	http.HandleFunc("/uninstall", uninstall)
 	http.ListenAndServe(":8081", nil)
 }
+
 
 func welcome(w http.ResponseWriter, r *http.Request) {
 	temp, err := template.ParseFiles("server/templates/welcome.html")
@@ -81,6 +83,26 @@ func register(w http.ResponseWriter, r *http.Request) {
 		server.CreateAccount(username, password)
 	}
 	http.Redirect(w, r, "/welcome", http.StatusSeeOther)
+}
+
+func enter(w http.ResponseWriter, r *http.Request) {
+	// temp, err := template.ParseFiles("index.html")
+	// if err != nil {
+	// 	log.Println("uuuupppsss")
+	// }
+	var username = r.FormValue("username")
+	var pass = r.FormValue("pw")
+
+	fmt.Println(username)
+	fmt.Println(pass)
+	trigger := server.SignIn(username, pass)
+	if trigger == true {
+		http.Redirect(w, r, "/open", http.StatusSeeOther)
+
+	} else {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
+	// log.Println(temp.Execute(w, server.SignIn))
 }
 
 func open(w http.ResponseWriter, r *http.Request) {
