@@ -36,7 +36,7 @@ type Super struct {
 	Count    []int
 }
 
-var clients []string = []string{"localhost"}
+var clients []string = []string{"52.176.60.129", "40.69.155.213"}
 var superHolder Super = getSuperHolder()
 var appsHolder Apps = getApps()
 
