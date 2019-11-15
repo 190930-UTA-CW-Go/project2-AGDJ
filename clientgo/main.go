@@ -101,7 +101,7 @@ func BatchUninstall(hold []aptprog.AptProgsStruct) {
 	for _, k := range hold {
 		// aptprog.InstallProgHandler(k.Name)
 		fmt.Println(k.Name + "Uninstalling ...")
-		aptprog.UninstallProgHandler(k.Name, "macasero")
+		aptprog.UninstallProgHandler(k.Name, "")
 	}
 	fmt.Println("Done")
 	log.Println("Successful removal of program/s")
@@ -113,7 +113,7 @@ func BatchInstall(hold []aptprog.AptProgsStruct) {
 	for _, k := range hold {
 		// aptprog.InstallProgHandler(k.Name)
 		fmt.Println(k.Name + "installing ...")
-		aptprog.InstallProgHandler(k.Name, "macasero")
+		aptprog.InstallProgHandler(k.Name, "")
 	}
 	fmt.Println("Done")
 	log.Println("Successful installation of program/s")
