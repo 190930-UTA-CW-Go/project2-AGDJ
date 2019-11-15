@@ -14,6 +14,7 @@ import (
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/cpumem"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/cpuusage"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/lscpu"
+	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/server"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/sysinfo"
 )
 
@@ -77,6 +78,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 		var password string = fmt.Sprint(r.Form["password"][0])
 		fmt.Println(username)
 		fmt.Println(password)
+		server.CreateAccount(username, password)
 	}
 	http.Redirect(w, r, "/welcome", http.StatusSeeOther)
 }
