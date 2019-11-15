@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      {{ range $key, $value := .Machines }}
+      <div>
+        <table>
+          <tr>
+            <th>Sys. User</th>
+            <th>Sys. Kernel</th>
+            <th>Sys. Kernel Release</th>
+            <th>Sys. Kernel Ver.</th>
+            <th>Sys. Arch.</th>
+            <th>Sys. Processor</th>
+            <th>Sys. Hardware</th>
+            <th>Sys. OS</th>
+          </tr>
+          <tr>
+            <td>{{ $value.Sysinfo.SystemUser }}</td>
+            <td>{{ $value.Sysinfo.SystemKernel }}</td>
+            <td>{{ $value.Sysinfo.SystemKernelRelease }}</td>
+            <td>{{ $value.Sysinfo.SystemKernelVersion }}</td>
+            <td>{{ $value.Sysinfo.SystemArch }}</td>
+            <td>{{ $value.Sysinfo.SystemProcessor }}</td>
+            <td>{{ $value.Sysinfo.SystemHardwarePlatform }}</td>
+            <td>{{ $value.Sysinfo.SystemOS }}</td>
+          </tr>
+        </table>
+
+        <table>
+          <tr>
+            <th>Architechture</th>
+            <th>CPU OP Mode</th>
+            <th>CPUs</th>
+            <th>Threads Per Core</th>
+            <th>VendorID</th>
+            <th>ModelName</th>
+            <th>CPU MHz</th>
+            <th>CPU Max MHz</th>
+            <th>CPU Min MHz</th>
+            <th>Virtualization</th>
+          </tr>
+          <tr>
+            <td>{{ $value.Lscpu.Architecture }}</td>
+            <td>{{ $value.Lscpu.CPUopmode }}</td>
+            <td>{{ $value.Lscpu.CPUs }}</td>
+            <td>{{ $value.Lscpu.ThreadsPerCore }}</td>
+            <td>{{ $value.Lscpu.VendorID }}</td>
+            <td>{{ $value.Lscpu.ModelName }}</td>
+            <td>{{ $value.Lscpu.CPUMHz }}</td>
+            <td>{{ $value.Lscpu.CPUmaxMHz }}</td>
+            <td>{{ $value.Lscpu.CPUminMHz }}</td>
+            <td>{{ $value.Lscpu.Virtualization }}</td>
+          </tr>
+        </table>
+
+        <table>
+          <tr>
+            <th>TotalMEM</th>
+            <th>UsedMEM</th>
+            <th>FreeMEM</th>
+            <th>CacheMEM</th>
+          </tr>
+          <tr>
+            <td>{{ $value.Cpumem.TotalMEM }}</td>
+            <td>{{ $value.Cpumem.UsedMEM }}</td>
+            <td>{{ $value.Cpumem.FreeMEM }}</td>
+            <td>{{ $value.Cpumem.CacheMEM }}</td>
+          </tr>
+        </table>
+
+        <table>
+            <tr>
+                {{ range $k, $v := $value.CPUUsage.Usage }}
+                <td><div>{{ $k }}</div></td>
+                <td><div>{{ $v }}</div></td>
+            </tr>
+                {{ end }}
+        </table>
+      </div>
+      {{ end }}
+    </div>
+  </body>
+</html>
