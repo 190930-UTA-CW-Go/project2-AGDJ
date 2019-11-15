@@ -55,7 +55,7 @@ func GetSearchInfo() []AptProgsStruct {
 		if count > 2 {
 			if txthold != "\n" {
 				if lineSwitcher {
-					progs[index].Desc = txthold[2:]
+					progs[index].Desc = txthold
 					lineSwitcher = false
 
 				} else {
@@ -87,6 +87,7 @@ func def() {
 // func InstallProgHandler(appname string) {
 func InstallProgHandler(appname string, pw string) {
 	//exec.Command("sudo", "apt", "install", "-y", appname).Run()
+	fmt.Println("InstallProg installing", appname+"...")
 	cmd := "echo " + pw + " | sudo -S apt install -y " + appname
 	exec.Command("bash", "-c", cmd).Run()
 }
