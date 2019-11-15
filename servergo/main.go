@@ -14,6 +14,7 @@ import (
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/cpumem"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/cpuusage"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/lscpu"
+	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/server"
 	"github.com/190930-UTA-CW-Go/project2-AGDJ/servergo/sysinfo"
 )
 
@@ -54,10 +55,31 @@ func main() {
 //////////////////// Front End Functions //////////////////
 func serveAndListen() {
 	http.Handle("/", http.FileServer(http.Dir("server")))
-	http.HandleFunc("/open", open)
+	http.HandleFunc("/signin", enter)
+	//http.HandleFunc("/open", open)
 	http.HandleFunc("/installapps", installApps)
 	http.HandleFunc("/typedprogs", typedprogs)
 	http.ListenAndServe(":8081", nil)
+}
+
+func enter(w http.ResponseWriter, r *http.Request) {
+	// temp, err := template.ParseFiles("index.html")
+	// if err != nil {
+	// 	log.Println("uuuupppsss")
+	// }
+	var username = r.FormValue("username")
+	var pass = r.FormValue("pw")
+
+	fmt.Println(username)
+	fmt.Println(pass)
+	trigger := server.SignIn(username, pass)
+	if trigger == true {
+		http.Redirect(w, r, "/open", http.StatusSeeOther)
+
+	} else {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
+	// log.Println(temp.Execute(w, server.SignIn))
 }
 
 func open(w http.ResponseWriter, r *http.Request) {

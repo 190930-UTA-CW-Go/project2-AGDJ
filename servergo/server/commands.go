@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+
+	_ "github.com/lib/pq"
 )
 
 // Users contains id, username, and password
@@ -21,7 +23,7 @@ type Containers struct {
 }
 
 // SignIn verifies if user credentials match database
-func SignIn(username string) (int, string, string) {
+func SignIn(username string, password string) bool {
 	var usernamedb, passdb string
 	var id int
 	var row *sql.Row
@@ -31,7 +33,14 @@ func SignIn(username string) (int, string, string) {
 	row = db.QueryRow("SELECT * FROM users WHERE username = $1", username)
 	row.Scan(&id, &usernamedb, &passdb)
 	fmt.Println("Logged in with", usernamedb, passdb)
-	return id, usernamedb, passdb
+
+	if password == passdb {
+		fmt.Println("password matches")
+		return true
+	}
+	fmt.Println("password doesn't match")
+	return false
+	//return id, usernamedb, passdb
 }
 
 // CreateAccount for either a customer or employee
