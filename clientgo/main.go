@@ -134,6 +134,7 @@ func handleRequests() {
 	route.HandleFunc("/install", ProgramsToInstall)
 	route.HandleFunc("/uninstall", ProgramsToUninstall)
 	route.HandleFunc("/apps", getApps)
+	route.HandleFunc("/searchinstall", ProgramsToInstall)
 	log.Fatal(http.ListenAndServe(":8080", route))
 }
 
