@@ -34,12 +34,15 @@ func SignIn(username string, password string) bool {
 	row.Scan(&id, &usernamedb, &passdb)
 	fmt.Println("Logged in with", usernamedb, passdb)
 
-	if password == passdb {
+	if username == "" && password == "" {
+		return false
+	} else if username == usernamedb && password == passdb {
 		fmt.Println("password matches")
 		return true
+	} else {
+		fmt.Println("password doesn't match")
+		return false
 	}
-	fmt.Println("password doesn't match")
-	return false
 	//return id, usernamedb, passdb
 }
 
