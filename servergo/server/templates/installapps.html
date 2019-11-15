@@ -22,9 +22,6 @@
                     </tr>
                     {{end}}
                 </tbody>
-                <tfoot>
-                    
-                </tfoot>
         </table>
         </div>
         <hr/>
@@ -35,27 +32,6 @@
             </div>
             <button type="submit" class="btn btn-outline-success">Install</button>
         </form>
-        <hr/>
-        <p>User Installed Programs</p>
-        <div class="table-wrapper" style="overflow: hidden; overflow-y: scroll;height: 450px;">
-            <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{range .Downloads}}
-                        <tr>
-                            <td>{{.}}</td>
-                        </tr>
-                        {{end}}
-                    </tbody>
-                    <tfoot>
-                        
-                    </tfoot>
-            </table>
-        </div>
         <hr/>
         <form class="bg-dark text-white" method="GET" action="/uninstall">
             <div class="form-group">

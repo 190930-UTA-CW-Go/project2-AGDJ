@@ -29,7 +29,7 @@ type ButlerInfoStruct struct {
 //Apps will pass the apps.
 type Apps struct {
 	Applications []aptprog.AptProgsStruct `json:"APPS"`
-	Downloads    []string                 `json:"DOWNLOADED"`
+	Downloads    []string
 }
 
 // Super =
