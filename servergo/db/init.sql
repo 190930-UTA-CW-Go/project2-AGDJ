@@ -8,9 +8,8 @@ create table ips(
     ip varchar
 );
 
-create table apps(
-    name varchar,
-    descrip varchar
+create table installed(
+    appname varchar
 );
 
 insert into users (username, password) values ('godfrey', 'hello');
