@@ -20,7 +20,7 @@ func SearchProgHandler() {
 	searchFile := os.ExpandEnv("$HOME/searchapps.txt")
 	file, err := os.OpenFile(searchFile, os.O_CREATE|os.O_WRONLY|os.O_RDONLY, 0666)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	defer file.Close()
 
@@ -41,6 +41,7 @@ func GetSearchInfo() []AptProgsStruct {
 		log.Fatal(err)
 	}
 	defer file.Close()
+	defer def()
 	scanner := bufio.NewReader(file)
 	prog := AptProgsStruct{}
 
@@ -71,6 +72,13 @@ func GetSearchInfo() []AptProgsStruct {
 
 	// fmt.Println(progs)
 	return progs
+}
+
+func def() {
+	fmt.Println("Program Panicked out!")
+	if r := recover(); r != nil {
+		fmt.Println("WHy is it breaking though")
+	}
 }
 
 // InstallProgHandler installs the program that is passed in
