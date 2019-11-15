@@ -179,3 +179,10 @@ func QueryAllInstalled() []string {
 
 	return installedApps
 }
+
+// AddMachine adds new machine to ips table
+func AddMachine(ipAddress string) {
+	db := OpenDB()
+	defer db.Close()
+	db.Exec("INSERT INTO ips (ip) VALUES ($1)", ipAddress)
+}

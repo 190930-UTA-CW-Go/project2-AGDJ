@@ -38,7 +38,7 @@ type Super struct {
 	Count    []int
 }
 
-// var clients []string = []string{"52.176.60.129", "40.69.155.213"}
+//var clients []string = []string{"52.176.60.129", "40.69.155.213"}
 var clients []string = []string{"localhost"}
 var superHolder Super = getSuperHolder()
 var appsHolder Apps = getApps()
@@ -57,6 +57,7 @@ func serveAndListen() {
 	http.Handle("/", http.FileServer(http.Dir("server")))
 	http.HandleFunc("/welcome", welcome)
 	http.HandleFunc("/register", register)
+	http.HandleFunc("/newmachine", newMachine)
 	//http.HandleFunc("/open", open)
 	http.HandleFunc("/signin", enter)
 	http.HandleFunc("/stats", getStats)
@@ -75,6 +76,7 @@ func getStats(w http.ResponseWriter, r *http.Request) {
 	temp.Execute(w, holder)
 }
 
+// welcome = Parses and executes the welcome.html
 func welcome(w http.ResponseWriter, r *http.Request) {
 	temp, err := template.ParseFiles("server/templates/welcome.html")
 	if err != nil {
@@ -83,6 +85,8 @@ func welcome(w http.ResponseWriter, r *http.Request) {
 	temp.Execute(w, nil)
 }
 
+// register = Parses the form for "Register New User" and adds to "users" database
+//			= Redirects the page back to /welcome
 func register(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("METHOD:", r.Method)
 	switch r.Method {
@@ -91,6 +95,20 @@ func register(w http.ResponseWriter, r *http.Request) {
 		var username string = fmt.Sprint(r.Form["username"][0])
 		var password string = fmt.Sprint(r.Form["password"][0])
 		server.CreateAccount(username, password)
+	}
+	http.Redirect(w, r, "/welcome", http.StatusSeeOther)
+}
+
+// newMachine = Parses the form for "Add New Machine" and adds to "ips" database
+//			  = Redirects the page back to /welcome
+func newMachine(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+		r.ParseForm()
+		var ipAddress string = fmt.Sprint(r.Form["ipAddress"][0])
+		fmt.Println("Ip Address:", ipAddress)
+		//server.AddMachine(ipAddress)
+		//PostProgramsToInstall("something", ipAddress)
 	}
 	http.Redirect(w, r, "/welcome", http.StatusSeeOther)
 }
@@ -190,14 +208,14 @@ func uninstall(w http.ResponseWriter, r *http.Request) {
 
 ///////////////////// API FUNCTIONS ///////////////////////////////////
 
-//InstallOnClients installs selected applications on all the client machines
+// InstallOnClients installs selected applications on all the client machines
 func InstallOnClients(install []aptprog.AptProgsStruct) {
 	for _, value := range clients {
 		PostProgramsToInstall(install, value)
 	}
 }
 
-//PostProgramsToInstall will send program list of things to be installed
+// PostProgramsToInstall will send program list of things to be installed
 func PostProgramsToInstall(install []aptprog.AptProgsStruct, ip string) {
 	marshData, err := json.Marshal(install)
 	if err != nil {
@@ -216,14 +234,14 @@ func PostProgramsToInstall(install []aptprog.AptProgsStruct, ip string) {
 	fmt.Println("Sent List")
 }
 
-//UninstallOnClients installs selected applications on all the client machines
+// UninstallOnClients installs selected applications on all the client machines
 func UninstallOnClients(install []aptprog.AptProgsStruct) {
 	for _, value := range clients {
 		PostProgramsToUninstall(install, value)
 	}
 }
 
-//PostProgramsToUninstall will send program list of things to be installed
+// PostProgramsToUninstall will send program list of things to be installed
 func PostProgramsToUninstall(install []aptprog.AptProgsStruct, ip string) {
 	marshData, err := json.Marshal(install)
 	if err != nil {
@@ -242,7 +260,7 @@ func PostProgramsToUninstall(install []aptprog.AptProgsStruct, ip string) {
 	fmt.Println("Sent List")
 }
 
-//Gets information from client server
+// Gets information from client server
 func getWorkerInfo(ip string) ButlerInfoStruct {
 	fmt.Println("start application getting worker info")
 	var infoHolder ButlerInfoStruct
