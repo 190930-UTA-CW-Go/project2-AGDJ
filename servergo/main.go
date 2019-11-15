@@ -38,12 +38,15 @@ type Super struct {
 }
 
 var clients []string = []string{"52.176.60.129", "40.69.155.213"}
+
+// var clients []string = []string{"localhost"}
 var superHolder Super = getSuperHolder()
 var appsHolder Apps = getApps()
 
 //////////// main function /////////////////
 func main() {
 	// Post("david", "chang")
+	server.StartDB()
 
 	//////////////////
 	serveAndListen()
@@ -62,7 +65,6 @@ func serveAndListen() {
 	http.ListenAndServe(":8081", nil)
 }
 
-
 func welcome(w http.ResponseWriter, r *http.Request) {
 	temp, err := template.ParseFiles("server/templates/welcome.html")
 	if err != nil {
@@ -78,8 +80,6 @@ func register(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		var username string = fmt.Sprint(r.Form["username"][0])
 		var password string = fmt.Sprint(r.Form["password"][0])
-		fmt.Println(username)
-		fmt.Println(password)
 		server.CreateAccount(username, password)
 	}
 	http.Redirect(w, r, "/welcome", http.StatusSeeOther)
@@ -97,7 +97,7 @@ func enter(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(pass)
 	trigger := server.SignIn(username, pass)
 	if trigger == true {
-		http.Redirect(w, r, "/open", http.StatusSeeOther)
+		http.Redirect(w, r, "/welcome", http.StatusSeeOther)
 
 	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
