@@ -28,7 +28,8 @@ type ButlerInfoStruct struct {
 
 //Apps will pass the apps.
 type Apps struct {
-	Apps []aptprog.AptProgsStruct `json:"APPS"`
+	Applications []aptprog.AptProgsStruct `json:"APPS"`
+	Downloads    []string
 }
 
 // Super =
@@ -37,9 +38,8 @@ type Super struct {
 	Count    []int
 }
 
-var clients []string = []string{"localhost", "localhost"}
-
-// var clients []string = []string{"localhost"}
+// var clients []string = []string{"52.176.60.129", "40.69.155.213"}
+var clients []string = []string{"localhost"}
 var superHolder Super = getSuperHolder()
 var appsHolder Apps = getApps()
 
@@ -132,8 +132,8 @@ func installApps(w http.ResponseWriter, r *http.Request) {
 	}
 	holder := appsHolder
 	// fmt.Println(holder.Apps)
-	log.Println(temp.Execute(w, holder))
-	// temp.Execute(w, holder)
+	//log.Println(temp.Execute(w, holder))
+	temp.Execute(w, holder)
 }
 
 // selected gets inputs passed in form and downloads programs
@@ -149,11 +149,17 @@ func typedprogs(w http.ResponseWriter, r *http.Request) {
 	progs := make([]aptprog.AptProgsStruct, 0)
 	for i := 0; i < len(programs); i++ {
 		progs = append(progs, aptprog.AptProgsStruct{Name: programs[i]})
+		server.AddInstalled(programs[i])
 	}
 	fmt.Println(progs)
 	//installation here
 	InstallOnClients(progs)
-	temp.Execute(w, progs)
+	installedData := server.QueryAllInstalled()
+	fmt.Println("this is installed data:", installedData)
+	tableData := Apps{Applications: progs, Downloads: installedData}
+	fmt.Println("tabledata downloads:", tableData.Downloads)
+	fmt.Println("CALLED DATA")
+	temp.Execute(w, tableData)
 }
 
 // selected gets inputs passed in form and downloads programs
@@ -169,11 +175,17 @@ func uninstall(w http.ResponseWriter, r *http.Request) {
 	progs := make([]aptprog.AptProgsStruct, 0)
 	for i := 0; i < len(programs); i++ {
 		progs = append(progs, aptprog.AptProgsStruct{Name: programs[i]})
+		server.DeleteInstalled(programs[i])
 	}
 	fmt.Println(progs)
 	//installation here
 	UninstallOnClients(progs)
-	temp.Execute(w, progs)
+	installedData := server.QueryAllInstalled()
+	fmt.Println("this is uninstalled data:", installedData)
+	tableData := Apps{Applications: progs, Downloads: installedData}
+	fmt.Println("tabledata downloads:", tableData.Downloads)
+	fmt.Println("CALLED DATA")
+	temp.Execute(w, tableData)
 }
 
 ///////////////////// API FUNCTIONS ///////////////////////////////////
