@@ -38,14 +38,11 @@ type Super struct {
 
 var clients []string = []string{"52.176.60.129", "40.69.155.213"}
 var superHolder Super = getSuperHolder()
+var appsHolder Apps = getApps()
 
 //////////// main function /////////////////
 func main() {
-	Post("david", "chang")
-	//testing if PostProgram will install a single application
-	// var wyrd []AptProgsStruct
-	// wyrd = append(wyrd, AptProgsStruct{Name: "wyrd", Desc: "Description dont matter"})
-	// PostProgramsToInstall(wyrd)
+	// Post("david", "chang")
 
 	//////////////////
 	serveAndListen()
@@ -59,6 +56,7 @@ func serveAndListen() {
 	http.HandleFunc("/open", open)
 	http.HandleFunc("/installapps", installApps)
 	http.HandleFunc("/typedprogs", typedprogs)
+	http.HandleFunc("/uninstall", uninstall)
 	http.ListenAndServe(":8081", nil)
 }
 
@@ -88,24 +86,9 @@ func open(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("this code sucks")
 	}
-	holder := getWorkerInfo()
-
 	/////////////////////
-
-	var count int = 5
-	var manyButlers []ButlerInfoStruct
-	for i := 0; i < count; i++ {
-		manyButlers = append(manyButlers, holder)
-	}
-
-	var numMachines []int
-	for i := 1; i <= len(manyButlers); i++ {
-		numMachines = append(numMachines, i)
-	}
-	superMan := Super{manyButlers, numMachines}
-
-	fmt.Println(holder.Lscpu.Architecture)
-	log.Println(temp.Execute(w, superMan))
+	fmt.Println(superHolder.Machines[0].Lscpu)
+	log.Println(temp.Execute(w, superHolder))
 }
 
 func installApps(w http.ResponseWriter, r *http.Request) {
@@ -113,7 +96,7 @@ func installApps(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("error in install Apps")
 	}
-	holder := getWorkerInfo()
+	holder := appsHolder
 	// fmt.Println(holder.Apps)
 	log.Println(temp.Execute(w, holder))
 	// temp.Execute(w, holder)
@@ -125,6 +108,7 @@ func typedprogs(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("Error in typedprogs function template")
 	}
+	//populating selected program into []AptProgStruct
 	query := r.FormValue("pname")
 	query = strings.Replace(query, ",", "", -1)
 	programs := strings.Fields(query)
@@ -133,18 +117,28 @@ func typedprogs(w http.ResponseWriter, r *http.Request) {
 		progs = append(progs, aptprog.AptProgsStruct{Name: programs[i]})
 	}
 	fmt.Println(progs)
-	infoByte, _ := json.Marshal(progs)
-	url := "http://localhost:8080/searchinstall"
+	//installation here
+	InstallOnClients(progs)
+	temp.Execute(w, progs)
+}
 
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(infoByte))
-	req.Header.Set("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
+// selected gets inputs passed in form and downloads programs
+func uninstall(w http.ResponseWriter, r *http.Request) {
+	temp, err := template.ParseFiles("server/templates/uninstalled.html")
 	if err != nil {
-		panic(err)
+		log.Println("Error in uninstalled function template")
 	}
-	defer resp.Body.Close()
+	//populating selected program into []AptProgStruct
+	query := r.FormValue("pname")
+	query = strings.Replace(query, ",", "", -1)
+	programs := strings.Fields(query)
+	progs := make([]aptprog.AptProgsStruct, 0)
+	for i := 0; i < len(programs); i++ {
+		progs = append(progs, aptprog.AptProgsStruct{Name: programs[i]})
+	}
+	fmt.Println(progs)
+	//installation here
+	UninstallOnClients(progs)
 	temp.Execute(w, progs)
 }
 
@@ -159,12 +153,11 @@ func InstallOnClients(install []aptprog.AptProgsStruct) {
 
 //PostProgramsToInstall will send program list of things to be installed
 func PostProgramsToInstall(install []aptprog.AptProgsStruct, ip string) {
-
 	marshData, err := json.Marshal(install)
 	if err != nil {
 		log.Println("Marshaling program installation went wrong")
 	}
-	url := "http://localhost:8080/install"
+	url := "http://" + ip + ":8080/install"
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(marshData))
 	req.Header.Set("Content-Type", "application/json")
 
@@ -177,11 +170,37 @@ func PostProgramsToInstall(install []aptprog.AptProgsStruct, ip string) {
 	fmt.Println("Sent List")
 }
 
-//Gets information from remote server
-func getWorkerInfo() ButlerInfoStruct {
+//InstallOnClients installs selected applications on all the client machines
+func UninstallOnClients(install []aptprog.AptProgsStruct) {
+	for _, value := range clients {
+		PostProgramsToUninstall(install, value)
+	}
+}
+
+//PostProgramsToInstall will send program list of things to be installed
+func PostProgramsToUninstall(install []aptprog.AptProgsStruct, ip string) {
+	marshData, err := json.Marshal(install)
+	if err != nil {
+		log.Println("Marshaling program installation went wrong")
+	}
+	url := "http://" + ip + ":8080/uninstall"
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(marshData))
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Println("client sending uninstall list fail")
+	}
+	defer resp.Body.Close()
+	fmt.Println("Sent List")
+}
+
+//Gets information from client server
+func getWorkerInfo(ip string) ButlerInfoStruct {
 	fmt.Println("start application getting worker info")
-	response, err := http.Get("http://localhost:8080/getbutlerinfo")
 	var infoHolder ButlerInfoStruct
+	response, err := http.Get("http://" + ip + ":8080/getbutlerinfo")
 	if err != nil {
 		fmt.Printf("HTTP request failed with err %s\n", err)
 	} else {
@@ -190,9 +209,9 @@ func getWorkerInfo() ButlerInfoStruct {
 	}
 	return infoHolder
 }
-    
+
 func getApps() Apps {
-	fmt.Println("start application getting worker info")
+	fmt.Println("start application getting applications info")
 	var infoHolder Apps
 	response, err := http.Get("http://" + clients[0] + ":8080/apps")
 	if err != nil {

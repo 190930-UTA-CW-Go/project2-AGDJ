@@ -55,7 +55,7 @@ func GetSearchInfo() []AptProgsStruct {
 		if count > 2 {
 			if txthold != "\n" {
 				if lineSwitcher {
-					progs[index].Desc = txthold[2:]
+					progs[index].Desc = txthold
 					lineSwitcher = false
 
 				} else {
