@@ -101,7 +101,7 @@ func BatchUninstall(hold []aptprog.AptProgsStruct) {
 	for _, k := range hold {
 		// aptprog.InstallProgHandler(k.Name)
 		fmt.Println(k.Name + "Uninstalling ...")
-		aptprog.UninstallProgHandler(k.Name, "")
+		aptprog.UninstallProgHandler(k.Name, "macasero")
 	}
 	fmt.Println("Done")
 	log.Println("Successful removal of program/s")
@@ -113,7 +113,7 @@ func BatchInstall(hold []aptprog.AptProgsStruct) {
 	for _, k := range hold {
 		// aptprog.InstallProgHandler(k.Name)
 		fmt.Println(k.Name + "installing ...")
-		aptprog.InstallProgHandler(k.Name, "")
+		aptprog.InstallProgHandler(k.Name, "macasero")
 	}
 	fmt.Println("Done")
 	log.Println("Successful installation of program/s")
@@ -134,7 +134,6 @@ func handleRequests() {
 	route.HandleFunc("/install", ProgramsToInstall)
 	route.HandleFunc("/uninstall", ProgramsToUninstall)
 	route.HandleFunc("/apps", getApps)
-	route.HandleFunc("/searchinstall", ProgramsToInstall)
 	log.Fatal(http.ListenAndServe(":8080", route))
 }
 

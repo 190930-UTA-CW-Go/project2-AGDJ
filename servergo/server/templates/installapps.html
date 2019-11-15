@@ -5,33 +5,67 @@
     </head>
     <body class="bg-dark text-white">
         <h1>Pods</h1>
-        <form class="bg-dark text-white" method="GET" action="/typedprogs">
-                
+        <p>Downloadable Programs</p>
+        <div class="table-wrapper" style="overflow: hidden; overflow-y: scroll;height: 450px;">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+        <table>
+                <tbody>
+                    {{range .Apps}}
+                    <tr>
+                        <td>{{.Name}}</td>
+                        <td>{{.Desc}}</td>
+                    </tr>
+                    {{end}}
+                </tbody>
+                <tfoot>
+                    
+                </tfoot>
+        </table>
+        </div>
+        <hr/>
+        <form class="bg-dark text-white" method="GET" action="/typedprogs">  
             <div class="form-group">
                 <label for="inputProgram2">What program(s) do you to install:</label>
                 <input type="text" class="form-control" id="programs" placeholder="Program Name Ex. golang, golang-1.10" name="pname">
             </div>
             <button type="submit" class="btn btn-outline-success">Install</button>
-            
         </form>
-        <!--<div class="table-wrapper form-check" style="overflow: hidden; overflow-y: scroll;height: 450px;">
-        <table>
-                <thead>
-                        <th>Programs</th>
-                    <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{range .Apps}}
-                    <tr>
-                        <td><input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">{{.Name}}</td>
-                        <td>{{.Desc}}</td>
-                    </tr>
-                    {{end}}
-                </tbody>
-        </table>
-        </div> -->
+        <hr/>
+        <p>Installed Programs</p>
+        <div class="table-wrapper" style="overflow: hidden; overflow-y: scroll;height: 450px;">
+            <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{range .Apps}}
+                        <tr>
+                            <td>{{.Name}}</td>
+                            <td>{{.Desc}}</td>
+                        </tr>
+                        {{end}}
+                    </tbody>
+                    <tfoot>
+                        
+                    </tfoot>
+            </table>
+        </div>
+        <hr/>
+        <form class="bg-dark text-white" method="GET" action="/uninstall">
+            <div class="form-group">
+                <label for="inputProgram2">What program(s) do you to uninstall:</label>
+
+                <input type="text" class="form-control" id="programs" placeholder="Program Name Ex. golang, golang-1.10" name="pname">
+            </div>
+            <button type="submit" class="btn btn-outline-success">Uninstall</button>
+        </form>
     </body>
 </html>
