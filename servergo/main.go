@@ -37,7 +37,7 @@ type Super struct {
 	Count    []int
 }
 
-var clients []string = []string{"52.176.60.129", "40.69.155.213"}
+var clients []string = []string{"localhost", "localhost"}
 
 // var clients []string = []string{"localhost"}
 var superHolder Super = getSuperHolder()
@@ -59,10 +59,20 @@ func serveAndListen() {
 	http.HandleFunc("/register", register)
 	//http.HandleFunc("/open", open)
 	http.HandleFunc("/signin", enter)
+	http.HandleFunc("/stats", getStats)
 	http.HandleFunc("/installapps", installApps)
 	http.HandleFunc("/typedprogs", typedprogs)
 	http.HandleFunc("/uninstall", uninstall)
 	http.ListenAndServe(":8081", nil)
+}
+
+func getStats(w http.ResponseWriter, r *http.Request) {
+	temp, err := template.ParseFiles("server/templates/stats.html")
+	if err != nil {
+		log.Printf("%s, error ccured in parsing data", err)
+	}
+	holder := getSuperHolder()
+	temp.Execute(w, holder)
 }
 
 func welcome(w http.ResponseWriter, r *http.Request) {
@@ -194,14 +204,14 @@ func PostProgramsToInstall(install []aptprog.AptProgsStruct, ip string) {
 	fmt.Println("Sent List")
 }
 
-//InstallOnClients installs selected applications on all the client machines
+//UninstallOnClients installs selected applications on all the client machines
 func UninstallOnClients(install []aptprog.AptProgsStruct) {
 	for _, value := range clients {
 		PostProgramsToUninstall(install, value)
 	}
 }
 
-//PostProgramsToInstall will send program list of things to be installed
+//PostProgramsToUninstall will send program list of things to be installed
 func PostProgramsToUninstall(install []aptprog.AptProgsStruct, ip string) {
 	marshData, err := json.Marshal(install)
 	if err != nil {
