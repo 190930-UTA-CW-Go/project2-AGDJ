@@ -13,3 +13,5 @@ create table installed(
 );
 
 insert into users (username, password) values ('godfrey', 'hello');
+insert into ips values ('52.176.60.129');
+insert into ips values ('40.69.155.213');
