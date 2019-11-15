@@ -18,9 +18,10 @@ type AptProgsStruct struct {
 // SearchProgHandler searches apt for specified program user searches for and puts it inside a text file
 func SearchProgHandler() {
 	searchFile := os.ExpandEnv("$HOME/searchapps.txt")
+	exec.Command("bash", "-c", "sudo rm"+searchFile+" -y").Run()
 	file, err := os.OpenFile(searchFile, os.O_CREATE|os.O_WRONLY|os.O_RDONLY, 0666)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	defer file.Close()
 
@@ -41,6 +42,7 @@ func GetSearchInfo() []AptProgsStruct {
 		log.Fatal(err)
 	}
 	defer file.Close()
+	defer def()
 	scanner := bufio.NewReader(file)
 	prog := AptProgsStruct{}
 
@@ -53,7 +55,7 @@ func GetSearchInfo() []AptProgsStruct {
 		if count > 2 {
 			if txthold != "\n" {
 				if lineSwitcher {
-					progs[index].Desc = txthold[2:]
+					progs[index].Desc = txthold
 					lineSwitcher = false
 
 				} else {
@@ -73,19 +75,30 @@ func GetSearchInfo() []AptProgsStruct {
 	return progs
 }
 
+func def() {
+	fmt.Println("defer started")
+	if r := recover(); r != nil {
+		fmt.Println("recovered from panic")
+	}
+	fmt.Println("defer closed")
+}
+
 // InstallProgHandler installs the program that is passed in
 // func InstallProgHandler(appname string) {
 func InstallProgHandler(appname string, pw string) {
 	//exec.Command("sudo", "apt", "install", "-y", appname).Run()
+	fmt.Println("InstallProg installing", appname+"...")
 	cmd := "echo " + pw + " | sudo -S apt install -y " + appname
 	exec.Command("bash", "-c", cmd).Run()
 }
 
 // UpgradeProgHandler upgrades the program to the latest version in apt
-func UpgradeProgHandler(appname string, pw string) {
+func UpgradeProgHandler(pw string) {
 	//exec.Command("sudo", "apt", "upgrade", "-y", appname).Run()
-	cmd := "echo " + pw + " | sudo -S apt upgrade -y " + appname
+	cmd := "echo " + pw + " | sudo -S apt update "
 	exec.Command("bash", "-c", cmd).Run()
+	cmd2 := "echo " + pw + " | sudo -S apt upgrade -y "
+	exec.Command("bash", "-c", cmd2).Run()
 }
 
 // UninstallProgHandler removes the program that is passed in
