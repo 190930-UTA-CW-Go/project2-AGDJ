@@ -1,18 +1,12 @@
 # JAG-D
 
-by Godfrey Macasero
+by Jorge Inostroza, Artem Khvan, Godfrey Macasero, David Chang
 
 ---
 
 ### Tools used
 
 ![Image](assets/ToolsProject2.png) Tools
-
-+++
-
-### Burndown chart
-
-![Image](assets/burndownchart.png) Burndown Chart
 
 ---
 ### Index Page
@@ -42,6 +36,10 @@ by Godfrey Macasero
 ### Stats
 ---
 ### @fa[laptop]()Demo
+
++++
+### Burndown chart
+![Image](assets/burndownchart.png) Burndown Chart
 
 ---
 ### Q&A
