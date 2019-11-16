@@ -1,11 +1,13 @@
 User Story
 JAG-D is a service that will allow one main server to set up and install applications from the apt package on many clients, through the use of API endpoints.
+#
 CLIENT
 - [ ] API endpoints to grab client information
 - [ ] API fucntion needs to parse data into a structure and send out the structure using json
 - [ ] JSON format data structures to be able to encode information
 - [ ] API endpoint to send configuration data to the client
 - [ ] HTTP server to handle API
+#
 SERVER
 - [ ] HTTP POST function to send a list of desired applications to be installed
 - [ ] HTTP GET function to grab information off the client
