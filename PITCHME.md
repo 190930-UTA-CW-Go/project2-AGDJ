@@ -12,7 +12,7 @@ by Godfrey Macasero
 
 ### Burndown chart
 
-![Image](assets/burndownchart.jpeg) Burndown Chart
+![Image](assets/burndownchart.png) Burndown Chart
 
 ---
 ### Index Page
