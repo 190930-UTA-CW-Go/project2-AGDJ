@@ -28,7 +28,8 @@ type ButlerInfoStruct struct {
 
 //Apps will pass the apps.
 type Apps struct {
-	Apps []aptprog.AptProgsStruct `json:"APPS"`
+	Applications []aptprog.AptProgsStruct `json:"APPS"`
+	Downloads    []string
 }
 
 // Super =
@@ -39,7 +40,7 @@ type Super struct {
 
 var clients []string = []string{"52.176.60.129", "40.69.155.213"}
 
-// var clients []string = []string{"localhost"}
+//var clients []string = []string{"localhost"}
 var superHolder Super = getSuperHolder()
 var appsHolder Apps = getApps()
 
@@ -57,14 +58,26 @@ func serveAndListen() {
 	http.Handle("/", http.FileServer(http.Dir("server")))
 	http.HandleFunc("/welcome", welcome)
 	http.HandleFunc("/register", register)
-	//http.HandleFunc("/open", open)
+	http.HandleFunc("/newmachine", newMachine)
 	http.HandleFunc("/signin", enter)
+	http.HandleFunc("/stats", getStats)
 	http.HandleFunc("/installapps", installApps)
 	http.HandleFunc("/typedprogs", typedprogs)
 	http.HandleFunc("/uninstall", uninstall)
-	http.ListenAndServe(":8081", nil)
+	http.ListenAndServe(":80", nil)
 }
 
+//getStats page to get client cpu information
+func getStats(w http.ResponseWriter, r *http.Request) {
+	temp, err := template.ParseFiles("server/templates/stats.html")
+	if err != nil {
+		log.Printf("%s, error ccured in parsing data", err)
+	}
+	holder := getSuperHolder()
+	temp.Execute(w, holder)
+}
+
+// welcome = Parses and executes the welcome.html
 func welcome(w http.ResponseWriter, r *http.Request) {
 	temp, err := template.ParseFiles("server/templates/welcome.html")
 	if err != nil {
@@ -73,6 +86,8 @@ func welcome(w http.ResponseWriter, r *http.Request) {
 	temp.Execute(w, nil)
 }
 
+// register = Parses the form for "Register New User" and adds to "users" database
+//			= Redirects the page back to /welcome
 func register(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("METHOD:", r.Method)
 	switch r.Method {
@@ -85,11 +100,26 @@ func register(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/welcome", http.StatusSeeOther)
 }
 
+// newMachine = Parses the form for "Add New Machine" and adds to "ips" database
+//			  = Redirects the page back to /welcome
+func newMachine(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+		r.ParseForm()
+		var ipAddress string = fmt.Sprint(r.Form["ipAddress"][0])
+		fmt.Println("Ip Address:", ipAddress)
+		progs := make([]aptprog.AptProgsStruct, 0)
+		downloaded := server.QueryAllInstalled()
+		for i := 0; i < len(downloaded); i++ {
+			progs = append(progs, aptprog.AptProgsStruct{Name: downloaded[i]})
+		}
+		PostProgramsToInstall(progs, ipAddress)
+	}
+	http.Redirect(w, r, "/welcome", http.StatusSeeOther)
+}
+
+//login page
 func enter(w http.ResponseWriter, r *http.Request) {
-	// temp, err := template.ParseFiles("index.html")
-	// if err != nil {
-	// 	log.Println("uuuupppsss")
-	// }
 	var username = r.FormValue("username")
 	var pass = r.FormValue("pw")
 
@@ -102,28 +132,16 @@ func enter(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
-	// log.Println(temp.Execute(w, server.SignIn))
 }
 
-func open(w http.ResponseWriter, r *http.Request) {
-	temp, err := template.ParseFiles("server/templates/workerinfo.html")
-	if err != nil {
-		log.Println("this code sucks")
-	}
-	/////////////////////
-	fmt.Println(superHolder.Machines[0].Lscpu)
-	log.Println(temp.Execute(w, superHolder))
-}
-
+//installApps is a page which displays the form for uninstall and install and list of available prgs
 func installApps(w http.ResponseWriter, r *http.Request) {
 	temp, err := template.ParseFiles("server/templates/installapps.html")
 	if err != nil {
 		log.Println("error in install Apps")
 	}
 	holder := appsHolder
-	// fmt.Println(holder.Apps)
-	log.Println(temp.Execute(w, holder))
-	// temp.Execute(w, holder)
+	temp.Execute(w, holder)
 }
 
 // selected gets inputs passed in form and downloads programs
@@ -139,11 +157,17 @@ func typedprogs(w http.ResponseWriter, r *http.Request) {
 	progs := make([]aptprog.AptProgsStruct, 0)
 	for i := 0; i < len(programs); i++ {
 		progs = append(progs, aptprog.AptProgsStruct{Name: programs[i]})
+		server.AddInstalled(programs[i])
 	}
 	fmt.Println(progs)
 	//installation here
 	InstallOnClients(progs)
-	temp.Execute(w, progs)
+	installedData := server.QueryAllInstalled()
+	fmt.Println("this is installed data:", installedData)
+	tableData := Apps{Applications: progs, Downloads: installedData}
+	fmt.Println("tabledata downloads:", tableData.Downloads)
+	fmt.Println("CALLED DATA")
+	temp.Execute(w, tableData)
 }
 
 // selected gets inputs passed in form and downloads programs
@@ -159,23 +183,26 @@ func uninstall(w http.ResponseWriter, r *http.Request) {
 	progs := make([]aptprog.AptProgsStruct, 0)
 	for i := 0; i < len(programs); i++ {
 		progs = append(progs, aptprog.AptProgsStruct{Name: programs[i]})
+		server.DeleteInstalled(programs[i])
 	}
 	fmt.Println(progs)
-	//installation here
+	//uninstallation here
 	UninstallOnClients(progs)
-	temp.Execute(w, progs)
+	installedData := server.QueryAllInstalled()
+	tableData := Apps{Applications: progs, Downloads: installedData}
+	temp.Execute(w, tableData)
 }
 
 ///////////////////// API FUNCTIONS ///////////////////////////////////
 
-//InstallOnClients installs selected applications on all the client machines
+// InstallOnClients installs selected applications on all the client machines
 func InstallOnClients(install []aptprog.AptProgsStruct) {
 	for _, value := range clients {
 		PostProgramsToInstall(install, value)
 	}
 }
 
-//PostProgramsToInstall will send program list of things to be installed
+// PostProgramsToInstall will send program list of things to be installed
 func PostProgramsToInstall(install []aptprog.AptProgsStruct, ip string) {
 	marshData, err := json.Marshal(install)
 	if err != nil {
@@ -194,14 +221,14 @@ func PostProgramsToInstall(install []aptprog.AptProgsStruct, ip string) {
 	fmt.Println("Sent List")
 }
 
-//InstallOnClients installs selected applications on all the client machines
+// UninstallOnClients installs selected applications on all the client machines
 func UninstallOnClients(install []aptprog.AptProgsStruct) {
 	for _, value := range clients {
 		PostProgramsToUninstall(install, value)
 	}
 }
 
-//PostProgramsToInstall will send program list of things to be installed
+// PostProgramsToUninstall will send program list of things to be installed
 func PostProgramsToUninstall(install []aptprog.AptProgsStruct, ip string) {
 	marshData, err := json.Marshal(install)
 	if err != nil {
@@ -220,7 +247,7 @@ func PostProgramsToUninstall(install []aptprog.AptProgsStruct, ip string) {
 	fmt.Println("Sent List")
 }
 
-//Gets information from client server
+// Gets information from client server
 func getWorkerInfo(ip string) ButlerInfoStruct {
 	fmt.Println("start application getting worker info")
 	var infoHolder ButlerInfoStruct
@@ -234,6 +261,7 @@ func getWorkerInfo(ip string) ButlerInfoStruct {
 	return infoHolder
 }
 
+//getApps function gets the apt program package list
 func getApps() Apps {
 	fmt.Println("start application getting applications info")
 	var infoHolder Apps
@@ -247,6 +275,7 @@ func getApps() Apps {
 	return infoHolder
 }
 
+//makes a super struct with the amount of clients we have set up
 func getSuperHolder() Super {
 	var holder Super
 	for key, val := range clients {

@@ -34,12 +34,15 @@ func SignIn(username string, password string) bool {
 	row.Scan(&id, &usernamedb, &passdb)
 	fmt.Println("Logged in with", usernamedb, passdb)
 
-	if password == passdb {
+	if username == "" && password == "" {
+		return false
+	} else if username == usernamedb && password == passdb {
 		fmt.Println("password matches")
 		return true
+	} else {
+		fmt.Println("password doesn't match")
+		return false
 	}
-	fmt.Println("password doesn't match")
-	return false
 	//return id, usernamedb, passdb
 }
 
@@ -141,4 +144,45 @@ func DeleteRunning(port int) {
 	db := OpenDB()
 	defer db.Close()
 	db.Exec("DELETE FROM running WHERE port = $1", port)
+}
+
+// AddInstalled add program to database
+func AddInstalled(appname string) {
+	db := OpenDB()
+	defer db.Close()
+	db.Exec("INSERT INTO installed (appname) VALUES ($1)", appname)
+}
+
+// DeleteInstalled deletes application from database
+func DeleteInstalled(appname string) {
+	db := OpenDB()
+	defer db.Close()
+	db.Exec("DELETE FROM installed WHERE appname = $1", appname)
+}
+
+// QueryAllInstalled looks at db for all installed applications
+func QueryAllInstalled() []string {
+	db := OpenDB()
+	defer db.Close()
+	var installedApps []string
+	rows, err := db.Query("SELECT * FROM installed")
+
+	if err != nil {
+		log.Printf(err.Error())
+	}
+
+	for rows.Next() {
+		var appnamedb string = ""
+		rows.Scan(&appnamedb)
+		installedApps = append(installedApps, appnamedb)
+	}
+
+	return installedApps
+}
+
+// AddMachine adds new machine to ips table
+func AddMachine(ipAddress string) {
+	db := OpenDB()
+	defer db.Close()
+	db.Exec("INSERT INTO ips (ip) VALUES ($1)", ipAddress)
 }

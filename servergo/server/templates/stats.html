@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+
+    <title>Welcome</title>
+
+    <style>
+      body {
+        height: 100%;
+        /* background-image: url("templates/docker.jpg"); */
+      }
+      html {
+        height: 100%;
+      }
+
+      .container {
+        padding: 30px;
+      }
+
+      .firstCol {
+        top: 0px;
+        right: 100px;
+      }
+
+      .secondCol {
+        color: #696969;
+      }
+
+      h2 {
+        color: black;
+      }
+
+      .formButton {
+        width: 20em;
+        height: 2em;
+      }
+
+      .formButton {
+        height: 50px;
+        width: 100px;
+      }
+
+      .nav {
+        display: inline;
+      }
+
+      navbar {
+        color: white;
+      }
+    </style>
+  </head>
+  <body class="bg-dark text-white">
+    <nav class="navbar navbar-expand-sm navbar-dark" style="background: blue;">
+      <a class="navbar-brand" href="#">JAG-D</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/welcome"
+              >Home </a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/installapps">Run App</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/stats">Stats<span class="sr-only">(current)</span></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div>
+      {{ range $key, $value := .Machines }}
+      <div>
+        <table class="table table-bordered table-striped table-sm" style="color: white">
+          <tr>
+            <th>Sys. User</th>
+            <th>Sys. Kernel</th>
+            <th>Sys. Kernel Release</th>
+            <th>Sys. Kernel Ver.</th>
+            <th>Sys. Arch.</th>
+            <th>Sys. Processor</th>
+            <th>Sys. Hardware</th>
+            <th>Sys. OS</th>
+          </tr>
+          <tr>
+            <td>{{ $value.Sysinfo.SystemUser }}</td>
+            <td>{{ $value.Sysinfo.SystemKernel }}</td>
+            <td>{{ $value.Sysinfo.SystemKernelRelease }}</td>
+            <td>{{ $value.Sysinfo.SystemKernelVersion }}</td>
+            <td>{{ $value.Sysinfo.SystemArch }}</td>
+            <td>{{ $value.Sysinfo.SystemProcessor }}</td>
+            <td>{{ $value.Sysinfo.SystemHardwarePlatform }}</td>
+            <td>{{ $value.Sysinfo.SystemOS }}</td>
+          </tr>
+        </table>
+
+        <table class="table table-bordered table-striped table-sm"style="color: white">
+          <tr>
+            <th>Architechture</th>
+            <th>CPU OP Mode</th>
+            <th>CPUs</th>
+            <th>Threads Per Core</th>
+            <th>VendorID</th>
+            <th>ModelName</th>
+            <th>CPU MHz</th>
+            <th>CPU Max MHz</th>
+            <th>CPU Min MHz</th>
+            <th>Virtualization</th>
+          </tr>
+          <tr>
+            <td>{{ $value.Lscpu.Architecture }}</td>
+            <td>{{ $value.Lscpu.CPUopmode }}</td>
+            <td>{{ $value.Lscpu.CPUs }}</td>
+            <td>{{ $value.Lscpu.ThreadsPerCore }}</td>
+            <td>{{ $value.Lscpu.VendorID }}</td>
+            <td>{{ $value.Lscpu.ModelName }}</td>
+            <td>{{ $value.Lscpu.CPUMHz }}</td>
+            <td>{{ $value.Lscpu.CPUmaxMHz }}</td>
+            <td>{{ $value.Lscpu.CPUminMHz }}</td>
+            <td>{{ $value.Lscpu.Virtualization }}</td>
+          </tr>
+        </table>
+
+        <table class="table table-bordered table-striped table-sm"style="color: white">
+          <tr>
+            <th>TotalMEM</th>
+            <th>UsedMEM</th>
+            <th>FreeMEM</th>
+            <th>CacheMEM</th>
+          </tr>
+          <tr>
+            <td>{{ $value.Cpumem.TotalMEM }}</td>
+            <td>{{ $value.Cpumem.UsedMEM }}</td>
+            <td>{{ $value.Cpumem.FreeMEM }}</td>
+            <td>{{ $value.Cpumem.CacheMEM }}</td>
+          </tr>
+        </table>
+
+        <table class="table table-bordered table-striped table-sm"style="color: white">
+          <tr>
+            {{ range $k, $v := $value.CPUUsage.Usage }}
+            <td><div>{{ $k }}</div></td>
+            <td><div>{{ $v }}</div></td>
+          </tr>
+          {{ end }}
+        </table>
+      </div>
+      {{ end }}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>

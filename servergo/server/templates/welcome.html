@@ -50,21 +50,48 @@
             display: inline;
         }
 
+        navbar {
+            color:white;
+        }
+
 
     </style>
   </head>
   <body>
+   
+      <nav class="navbar navbar-expand-sm navbar-dark" style="background: blue;">
+        <a class="navbar-brand" href="#">JAG-D</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/welcome">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/installapps">Run App</a>
+           </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/stats">Stats</a>
+            </li>
+      
+          </ul>
+        </div>
+      </nav> 
+    
         <div class="container" style="background: white;">
             <div class="row">
                 <div class="col-sm-4 firstCol">
-                    <div class="buttonBox">
+                    <!--<div class="buttonBox">
                         <form class="nav" action="/welcome" method="POST" >
                             <button type="submit" value="home" class="btn btn-primary formButton">Home</button>
                         </form>
                         <form class="nav" action="/installapps" method="POST" >
                             <button type="submit" value="install"class="btn btn-primary formButton">Run App</button>
                         </form>
-                    </div>
+                    </div>-->
                     <br><br><br>
                     <form action="/register" method="POST">
                         <h4>Register New User</h1>
@@ -78,31 +105,43 @@
                         </div>
                         <button type="submit" class="btn btn-dark">Register</button>
                     </form>
+                    <br><br><br>
+                    <form action="/newmachine" method="POST">
+                        <h4>Add New Machine</h1>
+                        <div class="form-group">
+                            <label>IP Address: </label>
+                            <input type="text" name="ipAddress" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-dark">Add</button>
+                    </form>
                 </div>
 
                 <div class="col-sm-8 secondCol">
-                    <h2>Welcome to the Docker App!</h3>
+                    <h2>Welcome to JAG-D!</h3>
                         <br><br><br>
-                    <h4>README.md</h4>
-                    <p style="white-space: pre;">
-# project2-AGDJ
+                    <h3>Instructions</h3>
 
-## Download packages
-```go
-go get golang.org/x/crypto/ssh
-go get github.com/gorilla/mux
-```
+                    <h3>Welcome page</h3>
+                    <ul>
+                        <li>Users can register other admins so they have access to the servers.</li>
+                        <li>Users can add another machine's IP so that it will have the same applications downloaded on that machine.</li>
+                    </ul>
 
-```bash
-sudo apt install sysstat
-```
+                    <h3>RunApp</h3>
+                    <ul>
+                        <li>Users can install or uninstall multiple applications to servers by listing out programs separated by commas.</li>
+                        <li>Users can see a list of applications they can download on the servers.</li>
+                    </ul>
 
-```bash
-To create ssh key:
-ssh-keygen -t rsa
-ssh-copy-id agent1@192.168.56.102
-```
-                    </p>
+
+                    <h3>Stats</h3>
+                    <ul>
+                        <li>Shows server data of the different machines that we have like the architecture of the system, kernel, and model.</li>
+                    </ul>
+
+                    <a href="https://gitpitch.com/190930-UTA-CW-Go/project2-AGDJ">Presentation</a>
+                    <br/>
+                    <a href="https://github.com/190930-UTA-CW-Go/project2-AGDJ">Github Repository</a>
                 </div>
             </div>
         </div>
