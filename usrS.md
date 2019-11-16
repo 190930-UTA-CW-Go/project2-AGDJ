@@ -16,7 +16,10 @@ SERVER
 - [ ] HTTP server with a front end.
 - [ ] Present information in an HTML template that parses the data. Stats Page
 - [ ] Users should have a user sign in for administrators
-- [ ] users get a welcome page describing the application
-- [ ] users get a web page where they can install multiple applications form a list on their client 
+- [ ] Users get a welcome page describing the application
+- [ ] Users get a web page where they can install multiple applications form a list on their client 
 - [ ] Administrative users have the abolity to add other moderators to edit client machines and give them a sign in and a password
+
+- [ ] A sign in page for administrators.
+- [ ] A welcome page that describes the application, registers new administrators, and adds new machines.
 
