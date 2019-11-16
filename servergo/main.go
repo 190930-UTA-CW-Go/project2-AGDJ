@@ -59,7 +59,6 @@ func serveAndListen() {
 	http.HandleFunc("/welcome", welcome)
 	http.HandleFunc("/register", register)
 	http.HandleFunc("/newmachine", newMachine)
-	//http.HandleFunc("/open", open)
 	http.HandleFunc("/signin", enter)
 	http.HandleFunc("/stats", getStats)
 	http.HandleFunc("/installapps", installApps)
@@ -68,6 +67,7 @@ func serveAndListen() {
 	http.ListenAndServe(":80", nil)
 }
 
+//getStats page to get client cpu information
 func getStats(w http.ResponseWriter, r *http.Request) {
 	temp, err := template.ParseFiles("server/templates/stats.html")
 	if err != nil {
@@ -118,11 +118,8 @@ func newMachine(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/welcome", http.StatusSeeOther)
 }
 
+//login page
 func enter(w http.ResponseWriter, r *http.Request) {
-	// temp, err := template.ParseFiles("index.html")
-	// if err != nil {
-	// 	log.Println("uuuupppsss")
-	// }
 	var username = r.FormValue("username")
 	var pass = r.FormValue("pw")
 
@@ -135,27 +132,15 @@ func enter(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
-	// log.Println(temp.Execute(w, server.SignIn))
 }
 
-func open(w http.ResponseWriter, r *http.Request) {
-	temp, err := template.ParseFiles("server/templates/workerinfo.html")
-	if err != nil {
-		log.Println("this code sucks")
-	}
-	/////////////////////
-	fmt.Println(superHolder.Machines[0].Lscpu)
-	log.Println(temp.Execute(w, superHolder))
-}
-
+//installApps is a page which displays the form for uninstall and install and list of available prgs
 func installApps(w http.ResponseWriter, r *http.Request) {
 	temp, err := template.ParseFiles("server/templates/installapps.html")
 	if err != nil {
 		log.Println("error in install Apps")
 	}
 	holder := appsHolder
-	// fmt.Println(holder.Apps)
-	//log.Println(temp.Execute(w, holder))
 	temp.Execute(w, holder)
 }
 
@@ -201,13 +186,10 @@ func uninstall(w http.ResponseWriter, r *http.Request) {
 		server.DeleteInstalled(programs[i])
 	}
 	fmt.Println(progs)
-	//installation here
+	//uninstallation here
 	UninstallOnClients(progs)
 	installedData := server.QueryAllInstalled()
-	fmt.Println("this is uninstalled data:", installedData)
 	tableData := Apps{Applications: progs, Downloads: installedData}
-	fmt.Println("tabledata downloads:", tableData.Downloads)
-	fmt.Println("CALLED DATA")
 	temp.Execute(w, tableData)
 }
 
@@ -279,6 +261,7 @@ func getWorkerInfo(ip string) ButlerInfoStruct {
 	return infoHolder
 }
 
+//getApps function gets the apt program package list
 func getApps() Apps {
 	fmt.Println("start application getting applications info")
 	var infoHolder Apps
@@ -292,6 +275,7 @@ func getApps() Apps {
 	return infoHolder
 }
 
+//makes a super struct with the amount of clients we have set up
 func getSuperHolder() Super {
 	var holder Super
 	for key, val := range clients {
