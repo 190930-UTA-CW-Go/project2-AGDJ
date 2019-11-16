@@ -63,7 +63,7 @@
       }
     </style>
   </head>
-  <body>
+  <body class="bg-dark text-white">
     <nav class="navbar navbar-expand-sm navbar-dark" style="background: blue;">
       <a class="navbar-brand" href="#">JAG-D</a>
       <button
@@ -80,16 +80,16 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="/welcome"
-              >Home <span class="sr-only">(current)</span></a
+              >Home </a
             >
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/installapps">Run App</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/stats">Stats</a>
+          <li class="nav-item active">
+            <a class="nav-link" href="/stats">Stats<span class="sr-only">(current)</span></a>
           </li>
         </ul>
       </div>
@@ -97,7 +97,7 @@
     <div>
       {{ range $key, $value := .Machines }}
       <div>
-        <table>
+        <table class="table table-bordered table-striped table-sm" style="color: white">
           <tr>
             <th>Sys. User</th>
             <th>Sys. Kernel</th>
@@ -120,7 +120,7 @@
           </tr>
         </table>
 
-        <table>
+        <table class="table table-bordered table-striped table-sm"style="color: white">
           <tr>
             <th>Architechture</th>
             <th>CPU OP Mode</th>
@@ -147,7 +147,7 @@
           </tr>
         </table>
 
-        <table>
+        <table class="table table-bordered table-striped table-sm"style="color: white">
           <tr>
             <th>TotalMEM</th>
             <th>UsedMEM</th>
@@ -162,7 +162,7 @@
           </tr>
         </table>
 
-        <table>
+        <table class="table table-bordered table-striped table-sm"style="color: white">
           <tr>
             {{ range $k, $v := $value.CPUUsage.Usage }}
             <td><div>{{ $k }}</div></td>
