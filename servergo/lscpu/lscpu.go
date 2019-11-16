@@ -1,7 +1,6 @@
 package lscpu
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -29,7 +28,7 @@ func CreateLSCPUFILE() {
 	exec.Command("rm", systemInfoLoc).Run()
 	getLSCPUDATA, err := exec.Command("lscpu").Output()
 	if err != nil {
-		log.Fatalf("%s:%s", err, getLSCPUDATA)
+		log.Printf("%s:%s", err, getLSCPUDATA)
 	}
 	err = ioutil.WriteFile(systemInfoLoc, getLSCPUDATA, 0644)
 }
@@ -53,7 +52,7 @@ func ReadLSCPUCommand() LSCPU {
 	if err != nil {
 		arch = []byte("N/A")
 		checkArch = false
-		log.Fatalf("%s: %s", err, "grabbing Architechtire failed")
+		log.Printf("%s: %s", err, "grabbing Architechtire failed")
 	}
 	//fmt.Println(string(arch)[21 : len(string(arch))-1])
 	if checkArch {
@@ -68,7 +67,7 @@ func ReadLSCPUCommand() LSCPU {
 	if err != nil {
 		CPUopMOde = []byte("N/A")
 		checkCPUOP = false
-		log.Fatalf("%s: %s", err, "grabbing CPUopMODE failed")
+		log.Printf("%s: %s", err, "grabbing CPUopMODE failed")
 	}
 	if checkCPUOP {
 		//fmt.Println(string(CPUopMOde)[21 : len(string(CPUopMOde))-1])
@@ -83,7 +82,7 @@ func ReadLSCPUCommand() LSCPU {
 	if err != nil {
 		cores = []byte("N/A")
 		checkCores = false
-		log.Fatalf("%s: %s", err, "grabbing core# failed")
+		log.Printf("%s: %s", err, "grabbing core# failed")
 	}
 	if checkCores {
 		//have to substring here because grep returns multiple values
@@ -100,7 +99,7 @@ func ReadLSCPUCommand() LSCPU {
 	if err != nil {
 		thread = []byte("N/A")
 		checkThread = false
-		log.Fatalf("%s: %s", err, "grabbing threads per core failed")
+		log.Printf("%s: %s", err, "grabbing threads per core failed")
 	}
 	if checkThread {
 		//fmt.Println(string(thread)[21 : len(string(thread))-1])
@@ -115,7 +114,7 @@ func ReadLSCPUCommand() LSCPU {
 	if err != nil {
 		venID = []byte("N/A")
 		checkVendID = false
-		log.Fatalf("%s: %s", err, "grabbing vendorID")
+		log.Printf("%s: %s", err, "grabbing vendorID")
 	}
 	if checkVendID {
 		//fmt.Println(string(venID)[21 : len(string(venID))-1])
@@ -130,7 +129,7 @@ func ReadLSCPUCommand() LSCPU {
 	if err != nil {
 		mn = []byte("N/A")
 		checkMN = false
-		log.Fatalf("%s: %s", err, "grabbing CPU model name failed")
+		log.Printf("%s: %s", err, "grabbing CPU model name failed")
 	}
 	if checkMN {
 		//fmt.Println(string(mn)[21 : len(string(mn))-1])
@@ -145,7 +144,7 @@ func ReadLSCPUCommand() LSCPU {
 	if err != nil {
 		cpuMhz = []byte("N/A")
 		checkMHZ = false
-		log.Fatalf("%s: %s", err, "grabbing CPU MHZ failed")
+		log.Printf("%s: %s", err, "grabbing CPU MHZ failed")
 	}
 	if checkMHZ {
 		//fmt.Println(string(cpuMhz)[21 : len(string(cpuMhz))-1])
@@ -160,7 +159,7 @@ func ReadLSCPUCommand() LSCPU {
 	if err != nil {
 		cpuMAXMhz = []byte("N/A")
 		checkMAXM = false
-		fmt.Printf("%s: %s", err, "grabbing CPU max MHz failed")
+		log.Printf("%s: %s", err, "grabbing CPU max MHz failed")
 	}
 	if checkMAXM {
 		//fmt.Println(string(cpuMAXMhz)[21 : len(string(cpuMAXMhz))-1])
@@ -175,7 +174,7 @@ func ReadLSCPUCommand() LSCPU {
 	if err != nil {
 		cpuMINMhz = []byte("N/A")
 		checkMINM = false
-		fmt.Printf("%s: %s", err, "grabbing CPU min MHz failed")
+		log.Printf("%s: %s", err, "grabbing CPU min MHz failed")
 	}
 	if checkMINM {
 		//fmt.Println(string(cpuMINMhz)[21 : len(string(cpuMINMhz))-1])
@@ -190,7 +189,7 @@ func ReadLSCPUCommand() LSCPU {
 	if err != nil {
 		virt = []byte("N/A")
 		checkVirt = false
-		log.Fatalf("%s: %s", err, "grabbing Virtualization failed")
+		log.Printf("%s: %s", err, "grabbing Virtualization failed")
 	}
 	if checkVirt {
 		//fmt.Println(string(virt)[21 : len(string(virt))-1])

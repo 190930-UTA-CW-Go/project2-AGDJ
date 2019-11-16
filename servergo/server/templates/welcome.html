@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Welcome</title>
+
+    <style>
+        body {
+            height: 100%;
+            /* background-image: url("templates/docker.jpg"); */
+        }
+        html {
+            height: 100%;
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        .firstCol {
+            top: 0px;
+            right: 100px;
+        }
+
+        .secondCol {
+            color: #696969;
+        }
+
+        h2 {
+            color: black;
+        }
+
+        .formButton {
+            width: 20em;
+            height: 2em;
+        }
+
+        .formButton {
+            height:50px;
+            width:100px;
+        }
+
+        .nav {
+            display: inline;
+        }
+
+        navbar {
+            color:white;
+        }
+
+
+    </style>
+  </head>
+  <body>
+   
+      <nav class="navbar navbar-expand-sm navbar-dark" style="background: blue;">
+        <a class="navbar-brand" href="#">JAG-D</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/welcome">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/installapps">Run App</a>
+           </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/stats">Stats</a>
+            </li>
+      
+          </ul>
+        </div>
+      </nav> 
+    
+        <div class="container" style="background: white;">
+            <div class="row">
+                <div class="col-sm-4 firstCol">
+                    <!--<div class="buttonBox">
+                        <form class="nav" action="/welcome" method="POST" >
+                            <button type="submit" value="home" class="btn btn-primary formButton">Home</button>
+                        </form>
+                        <form class="nav" action="/installapps" method="POST" >
+                            <button type="submit" value="install"class="btn btn-primary formButton">Run App</button>
+                        </form>
+                    </div>-->
+                    <br><br><br>
+                    <form action="/register" method="POST">
+                        <h4>Register New User</h1>
+                        <div class="form-group">
+                            <label>Username: </label>
+                            <input type="text" name="username" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Password: </label>
+                            <input type="password" name="password" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-dark">Register</button>
+                    </form>
+                    <br><br><br>
+                    <form action="/newmachine" method="POST">
+                        <h4>Add New Machine</h1>
+                        <div class="form-group">
+                            <label>IP Address: </label>
+                            <input type="text" name="ipAddress" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-dark">Add</button>
+                    </form>
+                </div>
+
+                <div class="col-sm-8 secondCol">
+                    <h2>Welcome to JAG-D!</h3>
+                        <br><br><br>
+                    <h4>README.md</h4>
+                    <p style="white-space: pre;">
+# project2-AGDJ
+
+## Download packages
+```go
+go get golang.org/x/crypto/ssh
+go get github.com/gorilla/mux
+```
+
+```bash
+sudo apt install sysstat
+```
+
+```bash
+To create ssh key:
+ssh-keygen -t rsa
+ssh-copy-id agent1@192.168.56.102
+```
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        
+    
+    
+    
+       
+   
+       
+        
+        
+    
+
+     <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
