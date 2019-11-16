@@ -28,6 +28,7 @@ type Apps struct {
 	Apps []aptprog.AptProgsStruct `json:"APPS"`
 }
 
+//API endpoint that posts available apt packages to be installed
 func getApps(w http.ResponseWriter, r *http.Request) {
 	defer def()
 	aptprog.SearchProgHandler()
@@ -44,6 +45,7 @@ func getApps(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//API endpoint that posts computer information
 func getButlerInfo(w http.ResponseWriter, r *http.Request) {
 	defer def()
 	sysinfo.CreateSystemInfoFile2()
@@ -119,6 +121,7 @@ func BatchInstall(hold []aptprog.AptProgsStruct) {
 	log.Println("Successful installation of program/s")
 }
 
+//Error handling and uses recover to make sure client doesnt crash
 func def() {
 	fmt.Println("defer started")
 	if r := recover(); r != nil {
