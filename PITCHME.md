@@ -6,13 +6,7 @@ by Godfrey Macasero
 
 ### Tools used
 
-![Image](assets/githubblue.png) Github
-![Image](assets/vscode.png) Visual Studio Code
-![Image](assets/goblue.png) Golang
-![Image](assets/bootstraplogo.png) Bootstrap
-![Image](assets/htmllogo.png) HTML
-![Image](assets/docker.png) Docker
-![Image](assets/postgresql3.png) Postgresql
+![Image](assets/ToolsProject2.png) Tools
 
 ---
 ### Index Page
