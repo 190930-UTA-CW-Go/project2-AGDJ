@@ -65,7 +65,7 @@ func serveAndListen() {
 	http.HandleFunc("/installapps", installApps)
 	http.HandleFunc("/typedprogs", typedprogs)
 	http.HandleFunc("/uninstall", uninstall)
-	http.ListenAndServe(":8081", nil)
+	http.ListenAndServe(":80", nil)
 }
 
 func getStats(w http.ResponseWriter, r *http.Request) {
