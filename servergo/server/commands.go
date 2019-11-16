@@ -186,3 +186,24 @@ func AddMachine(ipAddress string) {
 	defer db.Close()
 	db.Exec("INSERT INTO ips (ip) VALUES ($1)", ipAddress)
 }
+
+// QueryAllIP looks at db for all IPs inside db
+func QueryAllIP() []string {
+	db := OpenDB()
+	defer db.Close()
+	var tableIPData []string
+	rows, err := db.Query("SELECT * FROM ips")
+
+	if err != nil {
+		log.Printf(err.Error())
+	}
+
+	for rows.Next() {
+		var ipdb string = ""
+		rows.Scan(&ipdb)
+		fmt.Println("This is ipdb", ipdb)
+		tableIPData = append(tableIPData, ipdb)
+	}
+
+	return tableIPData
+}

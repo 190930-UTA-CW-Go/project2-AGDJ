@@ -38,17 +38,18 @@ type Super struct {
 	Count    []int
 }
 
-var clients []string = []string{"52.176.60.129", "40.69.155.213"}
-
+// var clients []string = server.QueryAllIP()
 //var clients []string = []string{"localhost"}
+var clients []string = []string{"52.176.60.129"}
 var superHolder Super = getSuperHolder()
 var appsHolder Apps = getApps()
 
 //////////// main function /////////////////
 func main() {
+	//go up()
 	// Post("david", "chang")
 	server.StartDB()
-
+	fmt.Println("print all IPs", server.QueryAllIP())
 	//////////////////
 	serveAndListen()
 }
@@ -294,7 +295,8 @@ func getApps() Apps {
 
 func getSuperHolder() Super {
 	var holder Super
-	for key, val := range clients {
+	holder2 := server.QueryAllIP()
+	for key, val := range holder2 {
 		holder.Machines = append(holder.Machines, getWorkerInfo(val))
 		holder.Count = append(holder.Count, key+1)
 	}
