@@ -11,36 +11,32 @@ by Jorge Inostroza, Artem Khvan, Godfrey Macasero, David Chang
 ---
 ### Index Page
 
-+++
-#### @fa[search]() Login
+* @fa[search]() Login
 
 ---
 ### Welcome Page
 
-+++
-#### @fa[save]() Configure
-#### @fa[line-chart]() Stats
-#### @fa[users-medical]() Add New Users
-#### @fa[laptop]() NewDevice
-#### @fa[book]() ReadMe
+* @fa[save]() Configure
+* @fa[line-chart]() Stats
+* @fa[users]() Add New Users
+* @fa[laptop]() NewDevice
+* @fa[book]() ReadMe
 
 ---
 
 ### Configure
 
-+++
-#### @fa[download]() Install
-#### @fa[trash]() Uninstall
-#### @fa[list]() List Downloadabale Programs
+* @fa[download]() Install
+* @fa[trash]() Uninstall
+* @fa[list]() List Downloadabale Programs
 ---
 ### Stats
 ---
-### @fa[laptop]()Demo
-
-+++
 ### Burndown chart
 ![Image](assets/burndownchart.png) Burndown Chart
 
++++
+### @fa[laptop]()Demo
 ---
 ### Q&A
 
