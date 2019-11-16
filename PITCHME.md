@@ -8,6 +8,12 @@ by Godfrey Macasero
 
 ![Image](assets/ToolsProject2.png) Tools
 
++++
+
+### Burndown chart
+
+![Image](assets/burndownchart.jpeg) Burndown Chart
+
 ---
 ### Index Page
 
@@ -20,6 +26,10 @@ by Godfrey Macasero
 +++
 #### @fa[save]() Configure
 #### @fa[line-chart]() Stats
+#### @fa[users-medical]() Add New Users
+#### @fa[laptop]() NewDevice
+#### @fa[book]() ReadMe
+
 ---
 
 ### Configure
@@ -27,7 +37,7 @@ by Godfrey Macasero
 +++
 #### @fa[download]() Install
 #### @fa[trash]() Uninstall
-#### @fa[download]() List Downloadabale 
+#### @fa[list]() List Downloadabale Programs
 ---
 ### Stats
 ---
@@ -37,4 +47,4 @@ by Godfrey Macasero
 ### Q&A
 
 ---
-### [Github Repository](https://github.com/gmac220/project1)
+### [Github Repository](https://github.com/190930-UTA-CW-Go/project2-AGDJ)
