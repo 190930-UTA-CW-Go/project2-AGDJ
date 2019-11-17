@@ -21,6 +21,7 @@ mkdir 190930-UTA-CW-Go
 cd 190930-UTA-CW-Go
 git clone https://github.com/190930-UTA-CW-Go/project2-AGDJ.git
 ```
+Or download the setup.sh script and it will do everything for you like setting up go and correct pathing.
 ## Download necessary packages on your device
 ```go
 go get golang.org/x/crypto/ssh
