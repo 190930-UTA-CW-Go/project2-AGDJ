@@ -1,5 +1,5 @@
 # JAG-D
-Is an application which can be used to manage your multiple clients with a single point master server machine. The application is able to install a list of selected applications from the apt package on multiple client machines.
+Is an application which can be used to manage your multiple clients with a single master server machine. The application is able to install a list of selected applications from the apt package on multiple client machines.
 ##
 Download Go if not already installed. Here is an easy setup for Ubuntu machines.
 ```bash
@@ -19,15 +19,30 @@ mkdir github.com/
 cd github.com
 mkdir 190930-UTA-CW-Go
 cd 190930-UTA-CW-Go
-git clone 
+git clone https://github.com/190930-UTA-CW-Go/project2-AGDJ.git
 ```
-## Download packages
+## Download necessary packages on your device
 ```go
 go get golang.org/x/crypto/ssh
 go get github.com/gorilla/mux
 go get github.com/lib/pq
 ```
-
 ```bash
 sudo apt install sysstat
+```
+## On Server(master)
+you migth have do edit the values for your IPs in the database
+```bash
+#server needs docker to host database
+sudo apt install docker.io -y
+sudo usermod -aG docker $USER
+sudo service docker start
+cd go/src/github.com/190930-UTA-CW-Go/project2-AGDJ/servergo
+sudo go run main.go &
+#the app will then start on port :80
+```
+## On clients
+```bash
+cd go/src/github.com/190930-UTA-CW-Go/project2-AGDJ/clientgo
+sudo go run main.go &
 ```
