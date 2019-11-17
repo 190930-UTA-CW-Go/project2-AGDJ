@@ -7,6 +7,10 @@ source .profile
 echo "export GOPATH=/home/$USERNAME/go" >> .bashrc
 source .bashrc
 cd $HOME
+go get golang.org/x/crypto/ssh
+go get github.com/gorilla/mux
+go get github.com/lib/pq
+sudo apt install sysstat -y
 mkdir go
 cd go/
 mkdir src/
