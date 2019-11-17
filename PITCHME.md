@@ -19,7 +19,7 @@ by Jorge Inostroza, Artem Khvan, Godfrey Macasero, David Chang
 * @fa[save]() Configure
 * @fa[line-chart]() Stats
 * @fa[users]() Add New Users
-* @fa[laptop]() NewDevice
+* @fa[laptop]() New Device
 * @fa[book]() ReadMe
 
 ---
