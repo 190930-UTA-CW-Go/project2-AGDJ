@@ -1,4 +1,11 @@
 # JAG-D
+Is an application which can be used to manage your multiple clients with a single point master server machine. The application is able to install a list of selected applications from the apt package on multiple client machines.
+##
+Download Go ifnot already installed.
+```bash
+
+
+```
 
 ## Download packages
 ```go
